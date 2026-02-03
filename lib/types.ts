@@ -1,117 +1,147 @@
 export interface TripProject {
-  id: string;
-  title: string;
-  startDate: string; // YYYY-MM-DD
-  endDate: string; // YYYY-MM-DD
-  itineraryText: string;
-  createdAt: number;
-  updatedAt: number;
-  settings: ProjectSettings;
-  days: ContentDay[];
-  routeHints?: string;
+    id: string;
+    title: string;
+    startDate: string; // YYYY-MM-DD
+    endDate: string; // YYYY-MM-DD
+    itineraryText: string;
+    createdAt: number;
+    updatedAt: number;
+    settings: ProjectSettings;
+    days: ContentDay[];
+    routeHints?: string;
 }
 
 export interface ProjectSettings {
-  tone: "raw" | "poetic" | "funny" | "minimal";
-  cadencePerDay: 0 | 1 | 2;
-  pillarWeights: {
-    rig: number;
-    life: number;
-    dog: number;
-    journey: number;
-  };
-  includeRouteHints: boolean;
-  dogEmphasis: "low" | "medium" | "high";
+    tone: "raw" | "poetic" | "funny" | "minimal";
+    cadencePerDay: 0 | 1 | 2;
+    pillarWeights: {
+        rig: number;
+        life: number;
+        dog: number;
+        journey: number;
+    };
+    includeRouteHints: boolean;
+    dogEmphasis: "low" | "medium" | "high";
+}
+
+export interface ShotItem {
+    text: string;
+    completed: boolean;
+}
+
+export interface BrollItem {
+    text: string;
+    completed: boolean;
 }
 
 export interface ContentDay {
-  id: string;
-  date: string; // YYYY-MM-DD
-  dayIndex: number; // 1-based
-  location?: string;
-  vibe: "travel" | "camp" | "city" | "rest";
-  pillar: "rig" | "life" | "dog" | "journey";
-  hook: string;
-  shots: string[];
-  broll: string[];
-  captionSeed: string;
-  storyBeats?: string[];
-  postingTime?: string; // e.g., "18:30"
-  status: "planned" | "filmed" | "edited" | "posted";
-  metrics?: {
-    views?: number;
-    likes?: number;
-    saves?: number;
-    comments?: number;
-  };
-  notes?: string;
-  editedFields?: string[]; // Track which fields have been manually edited
+    id: string;
+    date: string; // YYYY-MM-DD
+    dayIndex: number; // 1-based
+    location?: string;
+    vibe: "travel" | "camp" | "city" | "rest";
+    pillar: "rig" | "life" | "dog" | "journey";
+    hook: string;
+    shots: string[] | ShotItem[]; // Support both legacy string[] and new ShotItem[]
+    broll: string[] | BrollItem[]; // Support both legacy string[] and new BrollItem[]
+    captionSeed: string;
+    storyBeats?: string[];
+    postingTime?: string; // e.g., "18:30"
+    status: "planned" | "filmed" | "edited" | "posted";
+    metrics?: {
+        views?: number;
+        likes?: number;
+        saves?: number;
+        comments?: number;
+    };
+    notes?: string;
+    editedFields?: string[]; // Track which fields have been manually edited
+}
+
+// Helper to normalize shots/broll to the new format
+export function normalizeShots(shots: string[] | ShotItem[]): ShotItem[] {
+    if (shots.length === 0) return [];
+    if (typeof shots[0] === "string") {
+        return (shots as string[]).map((text) => ({ text, completed: false }));
+    }
+    return shots as ShotItem[];
+}
+
+export function normalizeBroll(broll: string[] | BrollItem[]): BrollItem[] {
+    if (broll.length === 0) return [];
+    if (typeof broll[0] === "string") {
+        return (broll as string[]).map((text) => ({ text, completed: false }));
+    }
+    return broll as BrollItem[];
 }
 
 export interface ParseTripRequest {
-  mode: "parse_trip";
-  payload: {
-    itineraryText: string;
-    startDate: string;
-    endDate: string;
-    settings: ProjectSettings;
-    routeHints?: string;
-  };
+    mode: "parse_trip";
+    payload: {
+        itineraryText: string;
+        startDate: string;
+        endDate: string;
+        settings: ProjectSettings;
+        routeHints?: string;
+    };
 }
 
 export interface GenerateDayRequest {
-  mode: "generate_day";
-  payload: {
-    day: {
-      date: string;
-      dayIndex: number;
-      location?: string;
-      vibe: ContentDay["vibe"];
+    mode: "generate_day";
+    payload: {
+        day: {
+            date: string;
+            dayIndex: number;
+            location?: string;
+            vibe: ContentDay["vibe"];
+        };
+        settings: ProjectSettings;
+        itineraryContext: string;
     };
-    settings: ProjectSettings;
-    itineraryContext: string;
-  };
 }
 
 export interface GenerateAllDaysRequest {
-  mode: "generate_all_days";
-  payload: {
-    days: Array<{
-      date: string;
-      dayIndex: number;
-      location?: string;
-      vibe: ContentDay["vibe"];
-    }>;
-    settings: ProjectSettings;
-    itineraryContext: string;
-  };
+    mode: "generate_all_days";
+    payload: {
+        days: Array<{
+            date: string;
+            dayIndex: number;
+            location?: string;
+            vibe: ContentDay["vibe"];
+        }>;
+        settings: ProjectSettings;
+        itineraryContext: string;
+    };
 }
 
-export type AnthropicRequest = ParseTripRequest | GenerateDayRequest | GenerateAllDaysRequest;
+export type AnthropicRequest =
+    | ParseTripRequest
+    | GenerateDayRequest
+    | GenerateAllDaysRequest;
 
 export interface ParsedTrip {
-  titleSuggested?: string;
-  days: Array<{
-    dayIndex: number;
-    date: string;
-    location?: string;
-    vibe: ContentDay["vibe"];
-    notes?: string;
-  }>;
+    titleSuggested?: string;
+    days: Array<{
+        dayIndex: number;
+        date: string;
+        location?: string;
+        vibe: ContentDay["vibe"];
+        notes?: string;
+    }>;
 }
 
 export interface GeneratedDay {
-  pillar: ContentDay["pillar"];
-  hook: string;
-  shots: string[];
-  broll: string[];
-  captionSeed: string;
-  storyBeats?: string[];
-  postingTime?: string;
+    pillar: ContentDay["pillar"];
+    hook: string;
+    shots: string[];
+    broll: string[];
+    captionSeed: string;
+    storyBeats?: string[];
+    postingTime?: string;
 }
 
 export interface AnthropicResponse<T = any> {
-  success: boolean;
-  data?: T;
-  error?: string;
+    success: boolean;
+    data?: T;
+    error?: string;
 }

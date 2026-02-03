@@ -1,26 +1,227 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #fafaf9;
+    --foreground: #1c1917;
+    --card: #ffffff;
+    --card-border: #e7e5e4;
+    --muted: #78716c;
+    --accent: #ea580c;
+    --accent-light: #fed7aa;
+    --success: #16a34a;
+    --success-light: #bbf7d0;
+    --warning: #ca8a04;
+    --warning-light: #fef08a;
+    --info: #0284c7;
+    --info-light: #bae6fd;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d6d3d1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a29e;
+}
+
+/* Form elements */
+input,
+select,
+textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+}
+
+/* Focus styles */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+/* Touch-friendly tap targets */
+button,
+a,
+input[type="checkbox"],
+select {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.2s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Card hover effect */
+.card-hover {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card-hover:active {
+    transform: translateY(0);
+}
+
+/* Status colors */
+.status-planned {
+    background: #f5f5f4;
+    color: #57534e;
+}
+.status-filmed {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+.status-edited {
+    background: #fef3c7;
+    color: #b45309;
+}
+.status-posted {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* Pillar colors */
+.pillar-rig {
+    background: #ffedd5;
+    color: #c2410c;
+}
+.pillar-life {
+    background: #f3e8ff;
+    color: #7e22ce;
+}
+.pillar-dog {
+    background: #fce7f3;
+    color: #be185d;
+}
+.pillar-journey {
+    background: #ccfbf1;
+    color: #0f766e;
+}
+
+/* Vibe badges */
+.vibe-travel {
+    background: #e0f2fe;
+}
+.vibe-camp {
+    background: #d1fae5;
+}
+.vibe-city {
+    background: #fef3c7;
+}
+.vibe-rest {
+    background: #f3e8ff;
+}
+
+/* Safe area padding for mobile */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Bottom sheet animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
 }
