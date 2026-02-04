@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import DayCard from "@/components/DayCard";
 import ProgressBar from "@/components/ProgressBar";
 import { TripProject, ContentDay, GeneratedDay } from "@/lib/types";
+import { addDays, getDaysBetween } from "@/lib/date";
 import {
     getProject,
     upsertProject,
@@ -35,6 +36,8 @@ export default function ProjectPage() {
     });
     const [showMenu, setShowMenu] = useState(false);
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
+    const [editingDates, setEditingDates] = useState(false);
+    const [newStartDate, setNewStartDate] = useState("");
 
     useEffect(() => {
         const loadedProject = getProject(projectId);
@@ -286,6 +289,32 @@ export default function ProjectPage() {
 
         setProject(updatedProject);
         upsertProject(updatedProject);
+    };
+
+    const shiftTripDates = (newStart: string) => {
+        if (!project) return;
+
+        const tripLength = getDaysBetween(project.startDate, project.endDate);
+        const newEndDate = addDays(newStart, tripLength - 1);
+
+        // Update all day dates
+        const updatedDays = project.days.map((day) => ({
+            ...day,
+            date: addDays(newStart, day.dayIndex - 1),
+        }));
+
+        const updatedProject = {
+            ...project,
+            startDate: newStart,
+            endDate: newEndDate,
+            days: updatedDays,
+            updatedAt: Date.now(),
+        };
+
+        setProject(updatedProject);
+        upsertProject(updatedProject);
+        setEditingDates(false);
+        setNewStartDate("");
     };
 
     if (loading) {
@@ -613,6 +642,91 @@ export default function ProjectPage() {
                             </button>
                         </div>
                         <div className="space-y-4">
+                            {/* Trip Dates */}
+                            <div>
+                                <label className="block text-sm font-medium text-stone-700 mb-2">
+                                    Trip Dates
+                                </label>
+                                {editingDates ? (
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-xs text-stone-500 mb-1">
+                                                New Start Date
+                                            </label>
+                                            <input
+                                                type="date"
+                                                value={newStartDate}
+                                                onChange={(e) =>
+                                                    setNewStartDate(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                                            />
+                                        </div>
+                                        {newStartDate && (
+                                            <p className="text-xs text-stone-500">
+                                                Trip will be shifted to{" "}
+                                                {newStartDate} -{" "}
+                                                {addDays(
+                                                    newStartDate,
+                                                    getDaysBetween(
+                                                        project.startDate,
+                                                        project.endDate,
+                                                    ) - 1,
+                                                )}
+                                            </p>
+                                        )}
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() =>
+                                                    newStartDate &&
+                                                    shiftTripDates(newStartDate)
+                                                }
+                                                disabled={!newStartDate}
+                                                className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-medium hover:bg-orange-600 disabled:bg-stone-300 disabled:cursor-not-allowed transition-colors"
+                                            >
+                                                Update Dates
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setEditingDates(false);
+                                                    setNewStartDate("");
+                                                }}
+                                                className="px-4 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-between p-3 bg-stone-50 rounded-xl">
+                                        <div>
+                                            <p className="text-sm font-medium text-stone-900">
+                                                {formatDateRange(
+                                                    project.startDate,
+                                                    project.endDate,
+                                                )}
+                                            </p>
+                                            <p className="text-xs text-stone-500">
+                                                {project.days.length} days
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                setEditingDates(true);
+                                                setNewStartDate(
+                                                    project.startDate,
+                                                );
+                                            }}
+                                            className="px-3 py-1.5 text-sm text-orange-600 font-medium hover:bg-orange-50 rounded-lg transition-colors"
+                                        >
+                                            Change
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
                             <div>
                                 <label className="block text-sm font-medium text-stone-700 mb-2">
                                     Content Tone
