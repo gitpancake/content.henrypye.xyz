@@ -17,6 +17,7 @@ import { enumerateDays } from "@/lib/date";
 export default function Home() {
     const router = useRouter();
     const [projects, setProjects] = useState<TripProject[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [generationProgress, setGenerationProgress] = useState({
@@ -28,7 +29,10 @@ export default function Home() {
     const [showImport, setShowImport] = useState(false);
 
     useEffect(() => {
-        setProjects(loadProjects());
+        loadProjects().then((data) => {
+            setProjects(data);
+            setIsLoading(false);
+        });
     }, []);
 
     const handleCreateProject = async (data: {
@@ -158,7 +162,7 @@ export default function Home() {
                 message: "Saving project...",
             });
 
-            upsertProject(project);
+            await upsertProject(project);
             router.push(`/project/${projectId}`);
         } catch (error) {
             console.error("Error creating project:", error);
@@ -173,11 +177,12 @@ export default function Home() {
         }
     };
 
-    const handleImport = () => {
+    const handleImport = async () => {
         const project = importProject(importJson);
         if (project) {
-            upsertProject(project);
-            setProjects(loadProjects());
+            await upsertProject(project);
+            const updatedProjects = await loadProjects();
+            setProjects(updatedProjects);
             setImportJson("");
             setShowImport(false);
             router.push(`/project/${project.id}`);
@@ -244,7 +249,34 @@ export default function Home() {
             </header>
 
             <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
-                {isGenerating ? (
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <div className="flex items-center gap-3">
+                            <svg
+                                className="w-5 h-5 text-orange-500 animate-spin"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                />
+                                <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                            </svg>
+                            <span className="text-stone-500">
+                                Loading trips...
+                            </span>
+                        </div>
+                    </div>
+                ) : isGenerating ? (
                     <div className="animate-fade-in">
                         <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
                             <div className="flex items-center gap-3 mb-6">

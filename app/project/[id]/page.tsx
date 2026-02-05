@@ -40,13 +40,14 @@ export default function ProjectPage() {
     const [newStartDate, setNewStartDate] = useState("");
 
     useEffect(() => {
-        const loadedProject = getProject(projectId);
-        if (loadedProject) {
-            setProject(loadedProject);
-        } else {
-            router.push("/");
-        }
-        setLoading(false);
+        getProject(projectId).then((loadedProject) => {
+            if (loadedProject) {
+                setProject(loadedProject);
+            } else {
+                router.push("/");
+            }
+            setLoading(false);
+        });
     }, [projectId, router]);
 
     // Close menu when clicking outside
@@ -59,7 +60,7 @@ export default function ProjectPage() {
         }
     }, [showMenu]);
 
-    const updateDay = (updatedDay: ContentDay) => {
+    const updateDay = async (updatedDay: ContentDay) => {
         if (!project) return;
 
         const updatedProject = {
@@ -71,7 +72,7 @@ export default function ProjectPage() {
         };
 
         setProject(updatedProject);
-        upsertProject(updatedProject);
+        await upsertProject(updatedProject);
     };
 
     const regenerateDay = async (dayId: string) => {
@@ -237,7 +238,7 @@ export default function ProjectPage() {
             };
 
             setProject(updatedProject);
-            upsertProject(updatedProject);
+            await upsertProject(updatedProject);
         } catch (error) {
             console.error("Error regenerating all days:", error);
             alert(
@@ -265,7 +266,7 @@ export default function ProjectPage() {
         setShowMenu(false);
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!project) return;
 
         const confirmDelete = confirm(
@@ -273,12 +274,14 @@ export default function ProjectPage() {
         );
 
         if (confirmDelete) {
-            deleteProject(project.id);
+            await deleteProject(project.id);
             router.push("/");
         }
     };
 
-    const updateSettings = (newSettings: Partial<TripProject["settings"]>) => {
+    const updateSettings = async (
+        newSettings: Partial<TripProject["settings"]>,
+    ) => {
         if (!project) return;
 
         const updatedProject = {
@@ -288,10 +291,10 @@ export default function ProjectPage() {
         };
 
         setProject(updatedProject);
-        upsertProject(updatedProject);
+        await upsertProject(updatedProject);
     };
 
-    const shiftTripDates = (newStart: string) => {
+    const shiftTripDates = async (newStart: string) => {
         if (!project) return;
 
         const tripLength = getDaysBetween(project.startDate, project.endDate);
@@ -312,7 +315,7 @@ export default function ProjectPage() {
         };
 
         setProject(updatedProject);
-        upsertProject(updatedProject);
+        await upsertProject(updatedProject);
         setEditingDates(false);
         setNewStartDate("");
     };
