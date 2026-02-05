@@ -2,59 +2,50 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
+    const { pathname } = request.nextUrl;
 
-  if (!authHeader) {
-    return new NextResponse("Authentication required", {
-      status: 401,
-      headers: {
-        "WWW-Authenticate": 'Basic realm="Content Calendar"',
-      },
-    });
-  }
+    // Allow access to login page and auth API
+    if (pathname === "/login" || pathname.startsWith("/api/auth")) {
+        return NextResponse.next();
+    }
 
-  const [scheme, encoded] = authHeader.split(" ");
+    // Allow static files
+    if (
+        pathname.startsWith("/_next") ||
+        pathname.startsWith("/favicon") ||
+        pathname.includes(".")
+    ) {
+        return NextResponse.next();
+    }
 
-  if (scheme !== "Basic" || !encoded) {
-    return new NextResponse("Invalid authentication", {
-      status: 401,
-      headers: {
-        "WWW-Authenticate": 'Basic realm="Content Calendar"',
-      },
-    });
-  }
+    const validUsername = process.env.AUTH_USERNAME;
+    const validPassword = process.env.AUTH_PASSWORD;
 
-  const decoded = atob(encoded);
-  const [username, password] = decoded.split(":");
+    // If no auth configured, allow access
+    if (!validUsername || !validPassword) {
+        return NextResponse.next();
+    }
 
-  const validUsername = process.env.AUTH_USERNAME;
-  const validPassword = process.env.AUTH_PASSWORD;
+    // Check for auth cookie
+    const authToken = request.cookies.get("auth_token");
 
-  if (!validUsername || !validPassword) {
-    // If no auth configured, allow access (for local dev without auth)
+    if (!authToken) {
+        // Redirect to login page
+        const loginUrl = new URL("/login", request.url);
+        return NextResponse.redirect(loginUrl);
+    }
+
     return NextResponse.next();
-  }
-
-  if (username === validUsername && password === validPassword) {
-    return NextResponse.next();
-  }
-
-  return new NextResponse("Invalid credentials", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="Content Calendar"',
-    },
-  });
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-  ],
+    matcher: [
+        /*
+         * Match all request paths except:
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         */
+        "/((?!_next/static|_next/image|favicon.ico).*)",
+    ],
 };
