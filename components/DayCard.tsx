@@ -14,7 +14,7 @@ import DayEditor from "./DayEditor";
 interface DayCardProps {
     day: ContentDay;
     onUpdate: (day: ContentDay) => void;
-    onRegenerate: () => void;
+    onRegenerate: (forceRegenerate?: boolean) => void;
     isExpanded?: boolean;
     onToggleExpand?: () => void;
 }
@@ -440,7 +440,27 @@ export default function DayCard({
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                onRegenerate();
+                                // If day has edited content fields, offer force regenerate
+                                const hasEditedContent = day.editedFields?.some(
+                                    (f) =>
+                                        [
+                                            "pillar",
+                                            "hook",
+                                            "shots",
+                                            "broll",
+                                            "captionSeed",
+                                        ].includes(f),
+                                );
+                                if (hasEditedContent) {
+                                    const force = confirm(
+                                        "This day has manual edits. Do you want to:\n\n" +
+                                            "• OK = Replace ALL content with fresh AI suggestions\n" +
+                                            "• Cancel = Keep your edits (only update unedited fields)",
+                                    );
+                                    onRegenerate(force);
+                                } else {
+                                    onRegenerate(false);
+                                }
                             }}
                             className="flex-1 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors flex items-center justify-center gap-2"
                         >

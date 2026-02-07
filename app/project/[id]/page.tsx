@@ -75,11 +75,28 @@ export default function ProjectPage() {
         await upsertProject(updatedProject);
     };
 
-    const regenerateDay = async (dayId: string) => {
+    const regenerateDay = async (
+        dayId: string,
+        forceRegenerate: boolean = false,
+    ) => {
         if (!project) return;
 
         const day = project.days.find((d) => d.id === dayId);
         if (!day) return;
+
+        // If force regenerate, clear the content-related edited fields first
+        const effectiveEditedFields = forceRegenerate
+            ? (day.editedFields || []).filter(
+                  (f) =>
+                      ![
+                          "pillar",
+                          "hook",
+                          "shots",
+                          "broll",
+                          "captionSeed",
+                      ].includes(f),
+              )
+            : day.editedFields;
 
         setRegenerating(dayId);
 
@@ -112,13 +129,16 @@ export default function ProjectPage() {
 
             const updatedDay: ContentDay = {
                 ...day,
-                ...(day.editedFields?.includes("pillar")
+                editedFields: forceRegenerate
+                    ? effectiveEditedFields
+                    : day.editedFields,
+                ...(effectiveEditedFields?.includes("pillar")
                     ? {}
                     : { pillar: generatedDay.pillar }),
-                ...(day.editedFields?.includes("hook")
+                ...(effectiveEditedFields?.includes("hook")
                     ? {}
                     : { hook: generatedDay.hook }),
-                ...(day.editedFields?.includes("shots")
+                ...(effectiveEditedFields?.includes("shots")
                     ? {}
                     : {
                           shots: generatedDay.shots.map((text) => ({
@@ -126,7 +146,7 @@ export default function ProjectPage() {
                               completed: false,
                           })),
                       }),
-                ...(day.editedFields?.includes("broll")
+                ...(effectiveEditedFields?.includes("broll")
                     ? {}
                     : {
                           broll: generatedDay.broll.map((text) => ({
@@ -134,7 +154,7 @@ export default function ProjectPage() {
                               completed: false,
                           })),
                       }),
-                ...(day.editedFields?.includes("captionSeed")
+                ...(effectiveEditedFields?.includes("captionSeed")
                     ? {}
                     : { captionSeed: generatedDay.captionSeed }),
                 storyBeats: generatedDay.storyBeats,
@@ -915,7 +935,9 @@ export default function ProjectPage() {
                             <DayCard
                                 day={day}
                                 onUpdate={updateDay}
-                                onRegenerate={() => regenerateDay(day.id)}
+                                onRegenerate={(force) =>
+                                    regenerateDay(day.id, force)
+                                }
                                 isExpanded={expandedDay === day.id}
                                 onToggleExpand={() =>
                                     setExpandedDay(
