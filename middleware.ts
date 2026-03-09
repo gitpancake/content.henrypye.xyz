@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const SESSION_COOKIE = "firebase-token";
+
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
@@ -22,19 +24,10 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    const validUsername = process.env.AUTH_USERNAME;
-    const validPassword = process.env.AUTH_PASSWORD;
-
-    // If no auth configured, allow access
-    if (!validUsername || !validPassword) {
-        return NextResponse.next();
-    }
-
-    // Check for auth cookie
-    const authToken = request.cookies.get("auth_token");
+    // Check for firebase auth cookie
+    const authToken = request.cookies.get(SESSION_COOKIE);
 
     if (!authToken) {
-        // Redirect to login page
         const loginUrl = new URL("/login", request.url);
         return NextResponse.redirect(loginUrl);
     }
@@ -44,12 +37,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         */
         "/((?!_next/static|_next/image|favicon.ico).*)",
     ],
 };

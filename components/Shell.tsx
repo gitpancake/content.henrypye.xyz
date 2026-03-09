@@ -1,7 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { AuthProvider, useAuth, type AuthUser } from "@/contexts/AuthContext";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import ProfileDialog from "@/components/profile-dialog";
 import {
     Sidebar,
     SidebarContent,
@@ -21,18 +27,25 @@ const NAV_ITEMS = [
     { href: "/", label: "Projects" },
 ];
 
-export function Shell({ children }: { children: React.ReactNode }) {
+function getInitials(name: string | null, email: string): string {
+    if (name) {
+        return name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    }
+    return email[0]?.toUpperCase() ?? "?";
+}
+
+function ShellInner({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const router = useRouter();
+    const { user, logout } = useAuth();
+    const [profileOpen, setProfileOpen] = useState(false);
 
     function isActive(href: string) {
         return href === "/" ? pathname === "/" : pathname.startsWith(href);
-    }
-
-    async function handleLogout() {
-        await fetch("/api/auth/logout", { method: "POST" });
-        router.push("/login");
-        router.refresh();
     }
 
     return (
@@ -65,13 +78,34 @@ export function Shell({ children }: { children: React.ReactNode }) {
                     </SidebarGroup>
                 </SidebarContent>
 
-                <SidebarFooter className="p-4">
-                    <button
-                        onClick={handleLogout}
-                        className="text-xs text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors text-left"
-                    >
-                        Sign out
-                    </button>
+                <SidebarFooter>
+                    <Separator className="bg-sidebar-border" />
+                    <div className="px-2 py-1">
+                        <button
+                            onClick={() => setProfileOpen(true)}
+                            className="flex items-center gap-2 mb-2 w-full text-left hover:opacity-80 transition-opacity"
+                        >
+                            <Avatar className="size-6">
+                                {user.photoURL && (
+                                    <AvatarImage src={user.photoURL} alt={user.displayName ?? ""} />
+                                )}
+                                <AvatarFallback className="text-[10px] bg-sidebar-accent text-sidebar-accent-foreground">
+                                    {getInitials(user.displayName, user.email)}
+                                </AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs text-sidebar-foreground/70 truncate">
+                                {user.displayName ?? user.email}
+                            </span>
+                        </button>
+                        <div className="flex items-center justify-between">
+                            <button
+                                onClick={logout}
+                                className="text-xs text-sidebar-foreground/70 hover:text-sidebar-primary transition-colors"
+                            >
+                                Sign out
+                            </button>
+                        </div>
+                    </div>
                 </SidebarFooter>
             </Sidebar>
 
@@ -90,6 +124,42 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 </header>
                 <main className="p-4 lg:p-8">{children}</main>
             </SidebarInset>
+            <ProfileDialog open={profileOpen} onOpenChange={setProfileOpen} />
         </SidebarProvider>
+    );
+}
+
+export function Shell({ children }: { children: React.ReactNode }) {
+    const [user, setUser] = useState<AuthUser | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("/api/auth")
+            .then((r) => r.json())
+            .then((d) => {
+                if (d.authenticated) {
+                    setUser({
+                        uid: d.uid,
+                        email: d.email,
+                        displayName: d.displayName,
+                        photoURL: d.photoURL,
+                    });
+                }
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading || !user) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-background">
+                <Skeleton className="h-4 w-24" />
+            </div>
+        );
+    }
+
+    return (
+        <AuthProvider user={user}>
+            <ShellInner>{children}</ShellInner>
+        </AuthProvider>
     );
 }
