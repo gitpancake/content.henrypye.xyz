@@ -70,7 +70,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
         <form onSubmit={handleSubmit} className="space-y-5">
             {/* Trip Name */}
             <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                     Trip Name
                 </label>
                 <input
@@ -79,14 +79,14 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                     onChange={(e) => setTitle(e.target.value)}
                     required
                     placeholder="Pacific Coast Highway Adventure"
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                 />
             </div>
 
             {/* Dates */}
             <div className="grid grid-cols-2 gap-3">
                 <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                         Start Date
                     </label>
                     <input
@@ -94,11 +94,11 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                         value={startDate}
                         onChange={(e) => setStartDate(e.target.value)}
                         required
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                         End Date
                     </label>
                     <input
@@ -107,14 +107,14 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                         onChange={(e) => setEndDate(e.target.value)}
                         required
                         min={startDate}
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                     />
                 </div>
             </div>
 
             {/* Itinerary */}
             <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                     Trip Itinerary
                 </label>
                 <textarea
@@ -123,18 +123,18 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                     required
                     rows={5}
                     placeholder="Paste your road trip plan here. Can be freeform text, notes from ChatGPT, or any format..."
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all resize-none"
                 />
-                <p className="text-xs text-stone-400 mt-1.5">
+                <p className="text-xs text-muted-foreground mt-1.5">
                     AI will parse this into a day-by-day content calendar
                 </p>
             </div>
 
             {/* Route Hints */}
             <div>
-                <label className="block text-sm font-medium text-stone-700 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                     Route Hints
-                    <span className="text-stone-400 font-normal ml-1">
+                    <span className="text-muted-foreground font-normal ml-1">
                         (optional)
                     </span>
                 </label>
@@ -143,7 +143,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                     onChange={(e) => setRouteHints(e.target.value)}
                     rows={2}
                     placeholder="Additional stops, waypoints, or route details..."
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all resize-none"
                 />
             </div>
 
@@ -151,7 +151,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
             <button
                 type="button"
                 onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center gap-2 text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors"
+                className="flex items-center gap-2 text-sm text-primary font-medium hover:text-primary transition-colors"
             >
                 <svg
                     className={`w-4 h-4 transition-transform ${showSettings ? "rotate-90" : ""}`}
@@ -171,10 +171,10 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
 
             {/* Advanced Settings */}
             {showSettings && (
-                <div className="space-y-5 p-4 bg-stone-50 rounded-2xl border border-stone-200 animate-fade-in">
+                <div className="space-y-5 p-4 bg-muted rounded-xl border border-border animate-fade-in">
                     {/* Tone */}
                     <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-3">
+                        <label className="block text-sm font-medium text-foreground mb-3">
                             Content Tone
                         </label>
                         <div className="grid grid-cols-2 gap-2">
@@ -190,8 +190,8 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                                     }
                                     className={`p-3 rounded-xl text-left transition-all border-2 ${
                                         settings.tone === option.value
-                                            ? "bg-orange-50 border-orange-400 text-orange-700"
-                                            : "bg-white border-stone-200 text-stone-600 hover:border-stone-300"
+                                            ? "bg-accent border-primary text-primary"
+                                            : "bg-card border-border text-muted-foreground hover:border-border"
                                     }`}
                                 >
                                     <span className="block text-sm font-medium">
@@ -207,7 +207,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
 
                     {/* Cadence */}
                     <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-3">
+                        <label className="block text-sm font-medium text-foreground mb-3">
                             Posts Per Day
                         </label>
                         <div className="flex gap-2">
@@ -223,8 +223,8 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                                     }
                                     className={`flex-1 py-3 rounded-xl text-center text-sm font-medium transition-all border-2 ${
                                         settings.cadencePerDay === num
-                                            ? "bg-orange-50 border-orange-400 text-orange-700"
-                                            : "bg-white border-stone-200 text-stone-600 hover:border-stone-300"
+                                            ? "bg-accent border-primary text-primary"
+                                            : "bg-card border-border text-muted-foreground hover:border-border"
                                     }`}
                                 >
                                     {num === 0 ? "None" : num}
@@ -235,7 +235,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
 
                     {/* Dog Emphasis */}
                     <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-3">
+                        <label className="block text-sm font-medium text-foreground mb-3">
                             Shelby (Dog) Content
                         </label>
                         <div className="grid grid-cols-3 gap-2">
@@ -253,7 +253,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                                     className={`p-3 rounded-xl text-center transition-all border-2 ${
                                         settings.dogEmphasis === option.value
                                             ? "bg-pink-50 border-pink-400 text-pink-700"
-                                            : "bg-white border-stone-200 text-stone-600 hover:border-stone-300"
+                                            : "bg-card border-border text-muted-foreground hover:border-border"
                                     }`}
                                 >
                                     <span className="block text-sm font-medium">
@@ -268,7 +268,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                     </div>
 
                     {/* Include Route Hints */}
-                    <label className="flex items-center gap-3 p-3 bg-white rounded-xl border border-stone-200 cursor-pointer hover:border-stone-300 transition-colors">
+                    <label className="flex items-center gap-3 p-3 bg-card rounded-xl border border-border cursor-pointer hover:border-border transition-colors">
                         <input
                             type="checkbox"
                             checked={settings.includeRouteHints}
@@ -278,13 +278,13 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                                     includeRouteHints: e.target.checked,
                                 })
                             }
-                            className="rounded border-stone-300 text-orange-500 focus:ring-orange-500"
+                            className="rounded border-border text-primary focus:ring-primary"
                         />
                         <div>
-                            <span className="block text-sm font-medium text-stone-700">
+                            <span className="block text-sm font-medium text-foreground">
                                 Include route hints in AI generation
                             </span>
-                            <span className="block text-xs text-stone-400">
+                            <span className="block text-xs text-muted-foreground">
                                 Use your route hints when generating content
                                 ideas
                             </span>
@@ -297,7 +297,7 @@ export default function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
             <button
                 type="submit"
                 disabled={isLoading || !title || !itineraryText}
-                className="w-full py-4 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 disabled:bg-stone-300 disabled:cursor-not-allowed transition-all shadow-lg shadow-orange-500/25 disabled:shadow-none flex items-center justify-center gap-2"
+                className="w-full py-4 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed transition-all shadow-sm disabled:shadow-none flex items-center justify-center gap-2"
             >
                 {isLoading ? (
                     <>

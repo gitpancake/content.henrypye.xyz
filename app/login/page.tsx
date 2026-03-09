@@ -40,17 +40,17 @@ export default function LoginPage() {
       <div className="w-full max-w-sm animate-fade-in">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/25">
+          <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-sm">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-stone-900">Content Calendar</h1>
-          <p className="text-stone-500 mt-1">Sign in to continue</p>
+          <h1 className="text-2xl font-bold text-foreground">Content Calendar</h1>
+          <p className="text-muted-foreground mt-1">Sign in to continue</p>
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="bg-card rounded-xl shadow-sm border border-border p-6 space-y-4">
           {error && (
             <div className="p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600 animate-fade-in">
               {error}
@@ -58,7 +58,7 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-stone-700 mb-2">
+            <label htmlFor="username" className="block text-sm font-medium text-foreground mb-2">
               Username
             </label>
             <input
@@ -69,13 +69,13 @@ export default function LoginPage() {
               required
               autoComplete="username"
               autoFocus
-              className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
               placeholder="Enter your username"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-stone-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
               Password
             </label>
             <input
@@ -85,7 +85,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
               placeholder="Enter your password"
             />
           </div>
@@ -93,7 +93,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading || !username || !password}
-            className="w-full py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 disabled:bg-stone-300 disabled:cursor-not-allowed transition-all shadow-lg shadow-orange-500/25 disabled:shadow-none flex items-center justify-center gap-2"
+            className="w-full py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed transition-all shadow-sm disabled:shadow-none flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
@@ -109,7 +109,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-stone-400 mt-6">
+        <p className="text-center text-xs text-muted-foreground mt-6">
           Plan your road trip content
         </p>
       </div>

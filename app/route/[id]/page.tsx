@@ -53,15 +53,15 @@ export default async function PublicRoutePage({ params }: { params: Promise<{ id
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-[#fafaf9] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-xl font-semibold text-stone-900 mb-2">Route not found</h1>
-          <p className="text-stone-500">This trip might have been deleted or the link is incorrect.</p>
+          <h1 className="text-xl font-semibold text-foreground mb-2">Route not found</h1>
+          <p className="text-muted-foreground">This trip might have been deleted or the link is incorrect.</p>
         </div>
       </div>
     );
@@ -75,22 +75,22 @@ export default async function PublicRoutePage({ params }: { params: Promise<{ id
   };
 
   return (
-    <div className="min-h-screen bg-[#fafaf9]">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b border-stone-200">
+      <header className="bg-card border-b border-border">
         <div className="max-w-2xl mx-auto px-4 py-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-sm">
+              <svg className="w-5 h-5 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-stone-900">{project.title}</h1>
-              <p className="text-sm text-stone-500">{formatDateRange(project.start_date, project.end_date)}</p>
+              <h1 className="text-2xl font-bold text-foreground">{project.title}</h1>
+              <p className="text-sm text-muted-foreground">{formatDateRange(project.start_date, project.end_date)}</p>
             </div>
           </div>
-          <p className="text-stone-600 mt-3">
+          <p className="text-muted-foreground mt-3">
             {project.days.length} day road trip itinerary
           </p>
         </div>
@@ -100,7 +100,7 @@ export default async function PublicRoutePage({ params }: { params: Promise<{ id
       <main className="max-w-2xl mx-auto px-4 py-6">
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-stone-200" />
+          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border" />
 
           <div className="space-y-4">
             {project.days.map((day, idx) => {
@@ -109,7 +109,7 @@ export default async function PublicRoutePage({ params }: { params: Promise<{ id
                 <div key={day.dayIndex} className="relative pl-16 animate-fade-in" style={{ animationDelay: `${idx * 50}ms` }}>
                   {/* Timeline dot */}
                   <div className={`absolute left-4 w-5 h-5 rounded-full ${vibe.bg} ${vibe.border} border-2 flex items-center justify-center`}>
-                    <div className="w-2 h-2 rounded-full bg-stone-400" />
+                    <div className="w-2 h-2 rounded-full bg-muted-foreground" />
                   </div>
 
                   {/* Day card */}
@@ -118,15 +118,15 @@ export default async function PublicRoutePage({ params }: { params: Promise<{ id
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-lg">{vibe.icon}</span>
-                          <span className="font-semibold text-stone-900">Day {day.dayIndex}</span>
-                          <span className="text-stone-400">·</span>
-                          <span className="text-sm text-stone-600">{formatDisplayDate(day.date)}</span>
+                          <span className="font-semibold text-foreground">Day {day.dayIndex}</span>
+                          <span className="text-muted-foreground">·</span>
+                          <span className="text-sm text-muted-foreground">{formatDisplayDate(day.date)}</span>
                         </div>
                         {day.location && (
-                          <p className="text-stone-700 font-medium">{day.location}</p>
+                          <p className="text-foreground font-medium">{day.location}</p>
                         )}
                       </div>
-                      <span className="text-xs text-stone-500 bg-white/50 px-2 py-1 rounded-full">
+                      <span className="text-xs text-muted-foreground bg-white/50 px-2 py-1 rounded-full">
                         {vibe.label}
                       </span>
                     </div>
@@ -143,14 +143,14 @@ export default async function PublicRoutePage({ params }: { params: Promise<{ id
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
             </div>
-            <p className="text-sm text-stone-500 italic">End of trip</p>
+            <p className="text-sm text-muted-foreground italic">End of trip</p>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-stone-200 mt-12">
-        <div className="max-w-2xl mx-auto px-4 py-6 text-center text-sm text-stone-400">
+      <footer className="border-t border-border mt-12">
+        <div className="max-w-2xl mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
           Shared via Content Calendar
         </div>
       </footer>

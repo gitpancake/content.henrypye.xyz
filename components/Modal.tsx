@@ -51,10 +51,10 @@ export default function Modal({
             />
 
             {/* Modal */}
-            <div className="relative bg-white rounded-2xl shadow-xl max-w-sm w-full animate-slide-up overflow-hidden">
+            <div className="relative bg-card rounded-xl shadow-sm max-w-sm w-full animate-slide-up overflow-hidden">
                 {/* Header */}
                 <div className="px-5 pt-5 pb-3">
-                    <h3 className="text-lg font-semibold text-stone-900">
+                    <h3 className="text-lg font-semibold text-foreground">
                         {title}
                     </h3>
                 </div>
@@ -94,8 +94,8 @@ export function ConfirmModal({
 }: ConfirmModalProps) {
     const confirmStyles =
         confirmVariant === "danger"
-            ? "bg-red-500 hover:bg-red-600 shadow-red-500/25"
-            : "bg-orange-500 hover:bg-orange-600 shadow-orange-500/25";
+            ? "bg-destructive hover:bg-destructive/90"
+            : "bg-primary hover:bg-primary/90";
 
     return (
         <Modal
@@ -106,7 +106,7 @@ export function ConfirmModal({
                 <>
                     <button
                         onClick={onClose}
-                        className="flex-1 py-3 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition-colors"
+                        className="flex-1 py-3 bg-muted text-foreground rounded-xl font-medium hover:bg-muted/80 transition-colors"
                     >
                         {cancelText}
                     </button>
@@ -115,14 +115,14 @@ export function ConfirmModal({
                             onConfirm();
                             onClose();
                         }}
-                        className={`flex-1 py-3 text-white rounded-xl font-medium transition-colors shadow-lg ${confirmStyles}`}
+                        className={`flex-1 py-3 text-white rounded-xl font-medium transition-colors shadow-sm ${confirmStyles}`}
                     >
                         {confirmText}
                     </button>
                 </>
             }
         >
-            <p className="text-stone-600">{message}</p>
+            <p className="text-muted-foreground">{message}</p>
         </Modal>
     );
 }
@@ -150,7 +150,7 @@ export function RegenerateModal({
                             onRegenerate(true);
                             onClose();
                         }}
-                        className="w-full py-3 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/25"
+                        className="w-full py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors shadow-sm"
                     >
                         Replace All Content
                     </button>
@@ -159,33 +159,33 @@ export function RegenerateModal({
                             onRegenerate(false);
                             onClose();
                         }}
-                        className="w-full py-3 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition-colors"
+                        className="w-full py-3 bg-muted text-foreground rounded-xl font-medium hover:bg-muted/80 transition-colors"
                     >
                         Keep My Edits
                     </button>
                     <button
                         onClick={onClose}
-                        className="w-full py-2 text-stone-500 text-sm font-medium hover:text-stone-700 transition-colors"
+                        className="w-full py-2 text-muted-foreground text-sm font-medium hover:text-foreground transition-colors"
                     >
                         Cancel
                     </button>
                 </div>
             }
         >
-            <p className="text-stone-600 mb-3">
+            <p className="text-muted-foreground mb-3">
                 This day has manual edits. How would you like to regenerate?
             </p>
             <div className="space-y-2 text-sm">
                 <div className="flex items-start gap-2">
-                    <span className="text-orange-500 mt-0.5">●</span>
-                    <span className="text-stone-600">
+                    <span className="text-primary mt-0.5">●</span>
+                    <span className="text-muted-foreground">
                         <strong>Replace All</strong> — Get fresh AI suggestions
                         for everything
                     </span>
                 </div>
                 <div className="flex items-start gap-2">
-                    <span className="text-stone-400 mt-0.5">●</span>
-                    <span className="text-stone-600">
+                    <span className="text-muted-foreground mt-0.5">●</span>
+                    <span className="text-muted-foreground">
                         <strong>Keep Edits</strong> — Only update fields you
                         haven't changed
                     </span>
@@ -224,7 +224,7 @@ export function AlertModal({
             actions={
                 <button
                     onClick={onClose}
-                    className="w-full py-3 bg-stone-900 text-white rounded-xl font-medium hover:bg-stone-800 transition-colors"
+                    className="w-full py-3 bg-foreground text-card rounded-xl font-medium hover:bg-foreground/90 transition-colors"
                 >
                     OK
                 </button>
@@ -264,7 +264,7 @@ export function AlertModal({
                         </svg>
                     )}
                 </div>
-                <p className="text-stone-600 pt-2">{message}</p>
+                <p className="text-muted-foreground pt-2">{message}</p>
             </div>
         </Modal>
     );
@@ -337,7 +337,7 @@ function ToastItem({
     const variantStyles = {
         success: "bg-green-600 text-white",
         error: "bg-red-600 text-white",
-        info: "bg-stone-800 text-white",
+        info: "bg-foreground text-card",
     };
 
     const icons = {
@@ -390,7 +390,7 @@ function ToastItem({
 
     return (
         <div
-            className={`px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 animate-slide-up pointer-events-auto ${variantStyles[toast.variant]}`}
+            className={`px-4 py-3 rounded-xl shadow-sm flex items-center gap-3 animate-slide-up pointer-events-auto ${variantStyles[toast.variant]}`}
             onClick={onDismiss}
         >
             {icons[toast.variant]}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { Shell } from "@/components/Shell";
 import DayCard from "@/components/DayCard";
 import ProgressBar from "@/components/ProgressBar";
 import { ConfirmModal, AlertModal, useToast } from "@/components/Modal";
@@ -368,17 +369,21 @@ export default function ProjectPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-                <div className="animate-pulse text-stone-500">Loading...</div>
-            </div>
+            <Shell>
+                <div className="flex items-center justify-center py-20">
+                    <div className="animate-pulse text-muted-foreground">Loading...</div>
+                </div>
+            </Shell>
         );
     }
 
     if (!project) {
         return (
-            <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-                <p className="text-stone-500">Project not found</p>
-            </div>
+            <Shell>
+                <div className="flex items-center justify-center py-20">
+                    <p className="text-muted-foreground">Project not found</p>
+                </div>
+            </Shell>
         );
     }
 
@@ -408,17 +413,17 @@ export default function ProjectPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[var(--background)]">
-            {/* Header */}
-            <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-stone-200">
-                <div className="max-w-2xl mx-auto px-4 py-3">
-                    <div className="flex items-center justify-between">
+        <Shell>
+            <div className="max-w-2xl mx-auto">
+                {/* Project Header */}
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
                         <button
                             onClick={() => router.push("/")}
-                            className="p-2 -ml-2 hover:bg-stone-100 rounded-full transition-colors"
+                            className="p-2 -ml-2 hover:bg-muted rounded-full transition-colors"
                         >
                             <svg
-                                className="w-5 h-5 text-stone-600"
+                                className="w-5 h-5 text-muted-foreground"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -432,203 +437,201 @@ export default function ProjectPage() {
                             </svg>
                         </button>
 
-                        <div className="flex-1 text-center px-4">
-                            <h1 className="font-semibold text-stone-900 truncate">
+                        <div>
+                            <h1 className="font-semibold text-foreground truncate">
                                 {project.title}
                             </h1>
-                            <p className="text-xs text-stone-500">
+                            <p className="text-xs text-muted-foreground">
                                 {formatDateRange(
                                     project.startDate,
                                     project.endDate,
                                 )}
                             </p>
                         </div>
+                    </div>
 
-                        <div className="relative">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setShowMenu(!showMenu);
-                                }}
-                                className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+                    <div className="relative">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowMenu(!showMenu);
+                            }}
+                            className="p-2 hover:bg-muted rounded-full transition-colors"
+                        >
+                            <svg
+                                className="w-5 h-5 text-muted-foreground"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                             >
-                                <svg
-                                    className="w-5 h-5 text-stone-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                                    />
-                                </svg>
-                            </button>
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                />
+                            </svg>
+                        </button>
 
-                            {showMenu && (
-                                <div className="absolute right-0 top-12 w-48 bg-white rounded-xl shadow-lg border border-stone-200 py-2 animate-fade-in z-50">
-                                    <button
-                                        onClick={handleShare}
-                                        className="w-full px-4 py-2.5 text-left text-sm text-stone-700 hover:bg-stone-50 flex items-center gap-3"
+                        {showMenu && (
+                            <div className="absolute right-0 top-12 w-48 bg-card rounded-xl shadow-sm border border-border py-2 animate-fade-in z-50">
+                                <button
+                                    onClick={handleShare}
+                                    className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted flex items-center gap-3"
+                                >
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                                            />
-                                        </svg>
-                                        Share Route
-                                    </button>
-                                    <div className="border-t border-stone-100 my-1" />
-                                    <button
-                                        onClick={() => {
-                                            setShowItinerary(!showItinerary);
-                                            setShowMenu(false);
-                                        }}
-                                        className="w-full px-4 py-2.5 text-left text-sm text-stone-700 hover:bg-stone-50 flex items-center gap-3"
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                                        />
+                                    </svg>
+                                    Share Route
+                                </button>
+                                <div className="border-t border-border my-1" />
+                                <button
+                                    onClick={() => {
+                                        setShowItinerary(!showItinerary);
+                                        setShowMenu(false);
+                                    }}
+                                    className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted flex items-center gap-3"
+                                >
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                            />
-                                        </svg>
-                                        View Itinerary
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setShowSettings(!showSettings);
-                                            setShowMenu(false);
-                                        }}
-                                        className="w-full px-4 py-2.5 text-left text-sm text-stone-700 hover:bg-stone-50 flex items-center gap-3"
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        />
+                                    </svg>
+                                    View Itinerary
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowSettings(!showSettings);
+                                        setShowMenu(false);
+                                    }}
+                                    className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted flex items-center gap-3"
+                                >
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                                            />
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                            />
-                                        </svg>
-                                        Settings
-                                    </button>
-                                    <button
-                                        onClick={handleExport}
-                                        className="w-full px-4 py-2.5 text-left text-sm text-stone-700 hover:bg-stone-50 flex items-center gap-3"
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                                        />
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                        />
+                                    </svg>
+                                    Settings
+                                </button>
+                                <button
+                                    onClick={handleExport}
+                                    className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted flex items-center gap-3"
+                                >
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                                            />
-                                        </svg>
-                                        Export JSON
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setShowRegenerateAllConfirm(true);
-                                            setShowMenu(false);
-                                        }}
-                                        disabled={regeneratingAll}
-                                        className="w-full px-4 py-2.5 text-left text-sm text-stone-700 hover:bg-stone-50 flex items-center gap-3 disabled:opacity-50"
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                                        />
+                                    </svg>
+                                    Export JSON
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowRegenerateAllConfirm(true);
+                                        setShowMenu(false);
+                                    }}
+                                    disabled={regeneratingAll}
+                                    className="w-full px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted flex items-center gap-3 disabled:opacity-50"
+                                >
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                            />
-                                        </svg>
-                                        Regenerate All
-                                    </button>
-                                    <div className="border-t border-stone-100 my-2" />
-                                    <button
-                                        onClick={() => {
-                                            setShowDeleteConfirm(true);
-                                            setShowMenu(false);
-                                        }}
-                                        className="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3"
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                        />
+                                    </svg>
+                                    Regenerate All
+                                </button>
+                                <div className="border-t border-border my-2" />
+                                <button
+                                    onClick={() => {
+                                        setShowDeleteConfirm(true);
+                                        setShowMenu(false);
+                                    }}
+                                    className="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3"
+                                >
+                                    <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                     >
-                                        <svg
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                            />
-                                        </svg>
-                                        Delete Project
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        />
+                                    </svg>
+                                    Delete Project
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
-            </header>
 
-            <main className="max-w-2xl mx-auto px-4 py-4 pb-24">
                 {/* Progress Summary */}
-                <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 mb-4 animate-fade-in">
+                <div className="bg-card rounded-xl shadow-sm border border-border p-4 mb-4 animate-fade-in">
                     <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium text-stone-700">
+                        <span className="text-sm font-medium text-foreground">
                             Trip Progress
                         </span>
-                        <span className="text-sm font-semibold text-orange-600">
+                        <span className="text-sm font-semibold text-primary">
                             {progress}% complete
                         </span>
                     </div>
-                    <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div
                             className="h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full transition-all duration-500"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
-                    <div className="flex justify-between mt-3 text-xs text-stone-500">
+                    <div className="flex justify-between mt-3 text-xs text-muted-foreground">
                         <span>{statusCounts.posted} posted</span>
                         <span>{statusCounts.all} total days</span>
                     </div>
@@ -636,7 +639,7 @@ export default function ProjectPage() {
 
                 {/* Regeneration Progress */}
                 {regeneratingAll && (
-                    <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 mb-4 animate-fade-in">
+                    <div className="bg-card rounded-xl shadow-sm border border-border p-4 mb-4 animate-fade-in">
                         <ProgressBar
                             current={regenerationProgress.current}
                             total={regenerationProgress.total}
@@ -647,17 +650,17 @@ export default function ProjectPage() {
 
                 {/* Itinerary Panel */}
                 {showItinerary && (
-                    <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 mb-4 animate-fade-in">
+                    <div className="bg-card rounded-xl shadow-sm border border-border p-4 mb-4 animate-fade-in">
                         <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-semibold text-stone-900">
+                            <h3 className="font-semibold text-foreground">
                                 Trip Itinerary
                             </h3>
                             <button
                                 onClick={() => setShowItinerary(false)}
-                                className="p-1 hover:bg-stone-100 rounded-full"
+                                className="p-1 hover:bg-muted rounded-full"
                             >
                                 <svg
-                                    className="w-4 h-4 text-stone-500"
+                                    className="w-4 h-4 text-muted-foreground"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -671,15 +674,15 @@ export default function ProjectPage() {
                                 </svg>
                             </button>
                         </div>
-                        <pre className="whitespace-pre-wrap text-sm text-stone-600 bg-stone-50 rounded-xl p-4 max-h-64 overflow-y-auto">
+                        <pre className="whitespace-pre-wrap text-sm text-muted-foreground bg-muted rounded-xl p-4 max-h-64 overflow-y-auto">
                             {project.itineraryText}
                         </pre>
                         {project.routeHints && (
                             <>
-                                <h4 className="font-medium text-stone-900 mt-4 mb-2">
+                                <h4 className="font-medium text-foreground mt-4 mb-2">
                                     Route Hints
                                 </h4>
-                                <pre className="whitespace-pre-wrap text-sm text-stone-600 bg-stone-50 rounded-xl p-4">
+                                <pre className="whitespace-pre-wrap text-sm text-muted-foreground bg-muted rounded-xl p-4">
                                     {project.routeHints}
                                 </pre>
                             </>
@@ -689,17 +692,17 @@ export default function ProjectPage() {
 
                 {/* Settings Panel */}
                 {showSettings && (
-                    <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-4 mb-4 animate-fade-in">
+                    <div className="bg-card rounded-xl shadow-sm border border-border p-4 mb-4 animate-fade-in">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="font-semibold text-stone-900">
+                            <h3 className="font-semibold text-foreground">
                                 Settings
                             </h3>
                             <button
                                 onClick={() => setShowSettings(false)}
-                                className="p-1 hover:bg-stone-100 rounded-full"
+                                className="p-1 hover:bg-muted rounded-full"
                             >
                                 <svg
-                                    className="w-4 h-4 text-stone-500"
+                                    className="w-4 h-4 text-muted-foreground"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -716,13 +719,13 @@ export default function ProjectPage() {
                         <div className="space-y-4">
                             {/* Trip Dates */}
                             <div>
-                                <label className="block text-sm font-medium text-stone-700 mb-2">
+                                <label className="block text-sm font-medium text-foreground mb-2">
                                     Trip Dates
                                 </label>
                                 {editingDates ? (
                                     <div className="space-y-3">
                                         <div>
-                                            <label className="block text-xs text-stone-500 mb-1">
+                                            <label className="block text-xs text-muted-foreground mb-1">
                                                 New Start Date
                                             </label>
                                             <input
@@ -733,11 +736,11 @@ export default function ProjectPage() {
                                                         e.target.value,
                                                     )
                                                 }
-                                                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                                                className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                                             />
                                         </div>
                                         {newStartDate && (
-                                            <p className="text-xs text-stone-500">
+                                            <p className="text-xs text-muted-foreground">
                                                 Trip will be shifted to{" "}
                                                 {newStartDate} -{" "}
                                                 {addDays(
@@ -756,7 +759,7 @@ export default function ProjectPage() {
                                                     shiftTripDates(newStartDate)
                                                 }
                                                 disabled={!newStartDate}
-                                                className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl text-sm font-medium hover:bg-orange-600 disabled:bg-stone-300 disabled:cursor-not-allowed transition-colors"
+                                                className="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed transition-colors"
                                             >
                                                 Update Dates
                                             </button>
@@ -765,22 +768,22 @@ export default function ProjectPage() {
                                                     setEditingDates(false);
                                                     setNewStartDate("");
                                                 }}
-                                                className="px-4 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors"
+                                                className="px-4 py-2.5 bg-muted text-foreground rounded-xl text-sm font-medium hover:bg-muted/80 transition-colors"
                                             >
                                                 Cancel
                                             </button>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-between p-3 bg-stone-50 rounded-xl">
+                                    <div className="flex items-center justify-between p-3 bg-muted rounded-xl">
                                         <div>
-                                            <p className="text-sm font-medium text-stone-900">
+                                            <p className="text-sm font-medium text-foreground">
                                                 {formatDateRange(
                                                     project.startDate,
                                                     project.endDate,
                                                 )}
                                             </p>
-                                            <p className="text-xs text-stone-500">
+                                            <p className="text-xs text-muted-foreground">
                                                 {project.days.length} days
                                             </p>
                                         </div>
@@ -791,7 +794,7 @@ export default function ProjectPage() {
                                                     project.startDate,
                                                 );
                                             }}
-                                            className="px-3 py-1.5 text-sm text-orange-600 font-medium hover:bg-orange-50 rounded-lg transition-colors"
+                                            className="px-3 py-1.5 text-sm text-primary font-medium hover:bg-accent rounded-lg transition-colors"
                                         >
                                             Change
                                         </button>
@@ -800,7 +803,7 @@ export default function ProjectPage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-stone-700 mb-2">
+                                <label className="block text-sm font-medium text-foreground mb-2">
                                     Content Tone
                                 </label>
                                 <select
@@ -811,7 +814,7 @@ export default function ProjectPage() {
                                                 .value as TripProject["settings"]["tone"],
                                         })
                                     }
-                                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                                 >
                                     <option value="raw">Raw - Authentic</option>
                                     <option value="poetic">
@@ -827,7 +830,7 @@ export default function ProjectPage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-stone-700 mb-2">
+                                <label className="block text-sm font-medium text-foreground mb-2">
                                     Posting Cadence
                                 </label>
                                 <select
@@ -839,7 +842,7 @@ export default function ProjectPage() {
                                             ) as 0 | 1 | 2,
                                         })
                                     }
-                                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                                 >
                                     <option value={0}>No posts</option>
                                     <option value={1}>1 per day</option>
@@ -848,7 +851,7 @@ export default function ProjectPage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-stone-700 mb-2">
+                                <label className="block text-sm font-medium text-foreground mb-2">
                                     Dog Emphasis
                                 </label>
                                 <select
@@ -859,7 +862,7 @@ export default function ProjectPage() {
                                                 .value as TripProject["settings"]["dogEmphasis"],
                                         })
                                     }
-                                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                                 >
                                     <option value="low">Low</option>
                                     <option value="medium">Medium</option>
@@ -886,8 +889,8 @@ export default function ProjectPage() {
                             onClick={() => setFilterStatus(status)}
                             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                                 filterStatus === status
-                                    ? "bg-orange-500 text-white shadow-lg shadow-orange-500/25"
-                                    : "bg-white text-stone-600 border border-stone-200 hover:border-stone-300"
+                                    ? "bg-primary text-white shadow-sm"
+                                    : "bg-card text-muted-foreground border border-border hover:border-border"
                             }`}
                         >
                             {status === "all"
@@ -910,10 +913,10 @@ export default function ProjectPage() {
                             style={{ animationDelay: `${idx * 30}ms` }}
                         >
                             {regenerating === day.id && (
-                                <div className="absolute inset-0 bg-white/90 rounded-2xl flex items-center justify-center z-10">
+                                <div className="absolute inset-0 bg-card/90 rounded-xl flex items-center justify-center z-10">
                                     <div className="flex items-center gap-3">
                                         <svg
-                                            className="w-5 h-5 text-orange-500 animate-spin"
+                                            className="w-5 h-5 text-primary animate-spin"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                         >
@@ -931,7 +934,7 @@ export default function ProjectPage() {
                                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                             />
                                         </svg>
-                                        <span className="text-sm font-medium text-stone-700">
+                                        <span className="text-sm font-medium text-foreground">
                                             Regenerating...
                                         </span>
                                     </div>
@@ -956,12 +959,12 @@ export default function ProjectPage() {
 
                 {filteredDays.length === 0 && (
                     <div className="text-center py-12">
-                        <p className="text-stone-500">
+                        <p className="text-muted-foreground">
                             No days with this status
                         </p>
                     </div>
                 )}
-            </main>
+            </div>
 
             {/* Confirmation Modals */}
             <ConfirmModal
@@ -991,6 +994,6 @@ export default function ProjectPage() {
                 message={errorModal.message}
                 variant="error"
             />
-        </div>
+        </Shell>
     );
 }

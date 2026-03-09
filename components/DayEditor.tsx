@@ -100,15 +100,15 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
     ];
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden animate-fade-in">
+        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden animate-fade-in">
             {/* Header */}
-            <div className="sticky top-0 z-10 bg-white border-b border-stone-100 px-4 py-3 flex items-center justify-between">
+            <div className="sticky top-0 z-10 bg-card border-b border-border px-4 py-3 flex items-center justify-between">
                 <button
                     onClick={onCancel}
-                    className="p-2 -ml-2 hover:bg-stone-100 rounded-full transition-colors"
+                    className="p-2 -ml-2 hover:bg-muted rounded-full transition-colors"
                 >
                     <svg
-                        className="w-5 h-5 text-stone-600"
+                        className="w-5 h-5 text-muted-foreground"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -121,12 +121,12 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                         />
                     </svg>
                 </button>
-                <h3 className="font-semibold text-stone-900">
+                <h3 className="font-semibold text-foreground">
                     Edit Day {day.dayIndex}
                 </h3>
                 <button
                     onClick={handleSave}
-                    className="px-4 py-2 bg-orange-500 text-white rounded-full text-sm font-medium hover:bg-orange-600 transition-colors"
+                    className="px-4 py-2 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
                 >
                     Save
                 </button>
@@ -135,7 +135,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
             <div className="p-4 space-y-5 max-h-[70vh] overflow-y-auto">
                 {/* Location */}
                 <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                         Location
                     </label>
                     <input
@@ -143,13 +143,13 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         placeholder="Where are you this day?"
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                     />
                 </div>
 
                 {/* Vibe */}
                 <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                         Vibe
                     </label>
                     <div className="grid grid-cols-4 gap-2">
@@ -162,8 +162,8 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                                 }
                                 className={`py-3 rounded-xl text-center transition-all ${
                                     vibe === option.value
-                                        ? "bg-orange-100 border-2 border-orange-400 text-orange-700"
-                                        : "bg-stone-50 border border-stone-200 text-stone-600 hover:bg-stone-100"
+                                        ? "bg-accent border-2 border-primary text-primary"
+                                        : "bg-muted border border-border text-muted-foreground hover:bg-muted/80"
                                 }`}
                             >
                                 <span className="text-xl block mb-1">
@@ -179,7 +179,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
 
                 {/* Pillar */}
                 <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                         Content Pillar
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -195,7 +195,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                                 className={`py-3 px-4 rounded-xl text-center text-sm font-medium transition-all border-2 ${
                                     pillar === option.value
                                         ? option.color
-                                        : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100"
+                                        : "bg-muted border-border text-muted-foreground hover:bg-muted/80"
                                 }`}
                             >
                                 {option.label}
@@ -207,11 +207,11 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                 {/* Hook */}
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium text-stone-700">
+                        <label className="text-sm font-medium text-foreground">
                             Hook
                         </label>
                         <span
-                            className={`text-xs ${hook.length > 120 ? "text-red-500" : "text-stone-400"}`}
+                            className={`text-xs ${hook.length > 120 ? "text-red-500" : "text-muted-foreground"}`}
                         >
                             {hook.length}/120
                         </span>
@@ -222,20 +222,20 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                         onChange={(e) => setHook(e.target.value)}
                         maxLength={150}
                         placeholder="Your attention-grabbing hook..."
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                     />
                 </div>
 
                 {/* Shots */}
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium text-stone-700">
+                        <label className="text-sm font-medium text-foreground">
                             Shot List
                         </label>
                         <button
                             type="button"
                             onClick={addShot}
-                            className="text-xs text-orange-600 font-medium hover:text-orange-700 flex items-center gap-1"
+                            className="text-xs text-primary font-medium hover:text-primary flex items-center gap-1"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -266,7 +266,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                                         updateShot(idx, e.target.value)
                                     }
                                     placeholder={`Shot ${idx + 1}`}
-                                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                                    className="flex-1 px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                                 />
                                 <button
                                     type="button"
@@ -291,7 +291,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                         ))}
                     </div>
                     {shots.length === 0 && (
-                        <p className="text-sm text-stone-400 text-center py-4">
+                        <p className="text-sm text-muted-foreground text-center py-4">
                             No shots yet. Add your first shot.
                         </p>
                     )}
@@ -300,13 +300,13 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                 {/* B-Roll */}
                 <div>
                     <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium text-stone-700">
+                        <label className="text-sm font-medium text-foreground">
                             B-Roll
                         </label>
                         <button
                             type="button"
                             onClick={addBroll}
-                            className="text-xs text-orange-600 font-medium hover:text-orange-700 flex items-center gap-1"
+                            className="text-xs text-primary font-medium hover:text-primary flex items-center gap-1"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -337,7 +337,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                                         updateBroll(idx, e.target.value)
                                     }
                                     placeholder={`B-roll ${idx + 1}`}
-                                    className="flex-1 px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all"
+                                    className="flex-1 px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all"
                                 />
                                 <button
                                     type="button"
@@ -362,7 +362,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                         ))}
                     </div>
                     {broll.length === 0 && (
-                        <p className="text-sm text-stone-400 text-center py-4">
+                        <p className="text-sm text-muted-foreground text-center py-4">
                             No B-roll yet.
                         </p>
                     )}
@@ -370,7 +370,7 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
 
                 {/* Caption Seed */}
                 <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                         Caption Seed
                     </label>
                     <textarea
@@ -378,13 +378,13 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                         onChange={(e) => setCaptionSeed(e.target.value)}
                         rows={3}
                         placeholder="Starting point for your caption..."
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all resize-none"
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all resize-none"
                     />
                 </div>
 
                 {/* Notes */}
                 <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-2">
                         Notes
                     </label>
                     <textarea
@@ -392,22 +392,22 @@ export default function DayEditor({ day, onSave, onCancel }: DayEditorProps) {
                         onChange={(e) => setNotes(e.target.value)}
                         rows={3}
                         placeholder="Personal notes about this day..."
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all resize-none"
+                        className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all resize-none"
                     />
                 </div>
             </div>
 
             {/* Footer Actions */}
-            <div className="sticky bottom-0 bg-white border-t border-stone-100 p-4 flex gap-3">
+            <div className="sticky bottom-0 bg-card border-t border-border p-4 flex gap-3">
                 <button
                     onClick={onCancel}
-                    className="flex-1 py-3 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition-colors"
+                    className="flex-1 py-3 bg-muted text-foreground rounded-xl font-medium hover:bg-muted/80 transition-colors"
                 >
                     Cancel
                 </button>
                 <button
                     onClick={handleSave}
-                    className="flex-1 py-3 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/25"
+                    className="flex-1 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors shadow-sm"
                 >
                     Save Changes
                 </button>

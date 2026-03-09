@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Shell } from "@/components/Shell";
 import ProjectForm from "@/components/ProjectForm";
 import ProgressBar from "@/components/ProgressBar";
 import {
@@ -220,52 +221,43 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-[var(--background)]">
-            {/* Header */}
-            <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-stone-200">
-                <div className="max-w-2xl mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-xl font-semibold text-stone-900">
-                                Content Calendar
-                            </h1>
-                            <p className="text-sm text-stone-500">
-                                Plan your road trip content
-                            </p>
-                        </div>
-                        {!isCreating && !isGenerating && (
-                            <button
-                                onClick={() => setIsCreating(true)}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 active:scale-95 transition-all shadow-lg shadow-orange-500/25"
+        <Shell>
+            <div className="max-w-2xl mx-auto">
+                {/* New Trip button moved into page content */}
+                {!isCreating && !isGenerating && !isLoading && (
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-semibold text-foreground">
+                            Projects
+                        </h2>
+                        <button
+                            onClick={() => setIsCreating(true)}
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-full font-medium hover:bg-primary/90 active:scale-95 transition-all shadow-sm"
+                        >
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                             >
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M12 4v16m8-8H4"
-                                    />
-                                </svg>
-                                <span className="hidden sm:inline">
-                                    New Trip
-                                </span>
-                            </button>
-                        )}
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 4v16m8-8H4"
+                                />
+                            </svg>
+                            <span className="hidden sm:inline">
+                                New Trip
+                            </span>
+                        </button>
                     </div>
-                </div>
-            </header>
+                )}
 
-            <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
                 {isLoading ? (
                     <div className="flex items-center justify-center py-20">
                         <div className="flex items-center gap-3">
                             <svg
-                                className="w-5 h-5 text-orange-500 animate-spin"
+                                className="w-5 h-5 text-primary animate-spin"
                                 fill="none"
                                 viewBox="0 0 24 24"
                             >
@@ -283,18 +275,18 @@ export default function Home() {
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                 />
                             </svg>
-                            <span className="text-stone-500">
+                            <span className="text-muted-foreground">
                                 Loading trips...
                             </span>
                         </div>
                     </div>
                 ) : isGenerating ? (
                     <div className="animate-fade-in">
-                        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-6">
+                        <div className="bg-card rounded-xl shadow-sm border border-border p-6">
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
                                     <svg
-                                        className="w-5 h-5 text-orange-600 animate-pulse"
+                                        className="w-5 h-5 text-primary animate-pulse"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -308,10 +300,10 @@ export default function Home() {
                                     </svg>
                                 </div>
                                 <div>
-                                    <h2 className="font-semibold text-stone-900">
+                                    <h2 className="font-semibold text-foreground">
                                         Creating Your Calendar
                                     </h2>
-                                    <p className="text-sm text-stone-500">
+                                    <p className="text-sm text-muted-foreground">
                                         AI is generating your content plan
                                     </p>
                                 </div>
@@ -325,17 +317,17 @@ export default function Home() {
                     </div>
                 ) : isCreating ? (
                     <div className="animate-fade-in">
-                        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-                            <div className="flex items-center justify-between p-4 border-b border-stone-100">
-                                <h2 className="font-semibold text-stone-900">
+                        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+                            <div className="flex items-center justify-between p-4 border-b border-border">
+                                <h2 className="font-semibold text-foreground">
                                     New Trip
                                 </h2>
                                 <button
                                     onClick={() => setIsCreating(false)}
-                                    className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+                                    className="p-2 hover:bg-muted rounded-full transition-colors"
                                 >
                                     <svg
-                                        className="w-5 h-5 text-stone-500"
+                                        className="w-5 h-5 text-muted-foreground"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -359,8 +351,8 @@ export default function Home() {
                         {/* Import Section */}
                         {showImport && (
                             <div className="mb-6 animate-fade-in">
-                                <div className="bg-white rounded-2xl shadow-sm border border-stone-200 p-4">
-                                    <h3 className="font-medium text-stone-900 mb-3">
+                                <div className="bg-card rounded-xl shadow-sm border border-border p-4">
+                                    <h3 className="font-medium text-foreground mb-3">
                                         Import Project
                                     </h3>
                                     <textarea
@@ -369,12 +361,12 @@ export default function Home() {
                                             setImportJson(e.target.value)
                                         }
                                         placeholder="Paste your project JSON here..."
-                                        className="w-full h-32 px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all resize-none"
+                                        className="w-full h-32 px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all resize-none"
                                     />
                                     <div className="flex gap-2 mt-3">
                                         <button
                                             onClick={handleImport}
-                                            className="flex-1 px-4 py-2.5 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors"
+                                            className="flex-1 px-4 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors"
                                         >
                                             Import
                                         </button>
@@ -383,7 +375,7 @@ export default function Home() {
                                                 setShowImport(false);
                                                 setImportJson("");
                                             }}
-                                            className="px-4 py-2.5 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition-colors"
+                                            className="px-4 py-2.5 bg-muted text-foreground rounded-xl font-medium hover:bg-muted/80 transition-colors"
                                         >
                                             Cancel
                                         </button>
@@ -395,9 +387,9 @@ export default function Home() {
                         {/* Projects List */}
                         {projects.length === 0 ? (
                             <div className="text-center py-16 animate-fade-in">
-                                <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg
-                                        className="w-10 h-10 text-stone-400"
+                                        className="w-10 h-10 text-muted-foreground"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -410,23 +402,23 @@ export default function Home() {
                                         />
                                     </svg>
                                 </div>
-                                <h3 className="text-lg font-medium text-stone-900 mb-2">
+                                <h3 className="text-lg font-medium text-foreground mb-2">
                                     No trips yet
                                 </h3>
-                                <p className="text-stone-500 mb-6 max-w-sm mx-auto">
+                                <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
                                     Start planning your road trip content by
                                     creating a new project
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                                     <button
                                         onClick={() => setIsCreating(true)}
-                                        className="px-6 py-3 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/25"
+                                        className="px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors shadow-sm"
                                     >
                                         Create Your First Trip
                                     </button>
                                     <button
                                         onClick={() => setShowImport(true)}
-                                        className="px-6 py-3 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition-colors"
+                                        className="px-6 py-3 bg-muted text-foreground rounded-xl font-medium hover:bg-muted/80 transition-colors"
                                     >
                                         Import Existing
                                     </button>
@@ -435,14 +427,14 @@ export default function Home() {
                         ) : (
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
-                                    <h2 className="font-semibold text-stone-900">
+                                    <h2 className="font-semibold text-foreground">
                                         Your Trips
                                     </h2>
                                     <button
                                         onClick={() =>
                                             setShowImport(!showImport)
                                         }
-                                        className="text-sm text-orange-600 font-medium hover:text-orange-700"
+                                        className="text-sm text-primary font-medium hover:text-primary"
                                     >
                                         {showImport ? "Hide Import" : "Import"}
                                     </button>
@@ -474,17 +466,17 @@ export default function Home() {
                                                     `/project/${project.id}`,
                                                 )
                                             }
-                                            className="bg-white rounded-2xl shadow-sm border border-stone-200 p-5 cursor-pointer card-hover animate-fade-in"
+                                            className="bg-card rounded-xl shadow-sm border border-border p-5 cursor-pointer card-hover animate-fade-in"
                                             style={{
                                                 animationDelay: `${idx * 50}ms`,
                                             }}
                                         >
                                             <div className="flex items-start justify-between mb-3">
                                                 <div className="flex-1 min-w-0">
-                                                    <h3 className="font-semibold text-stone-900 truncate">
+                                                    <h3 className="font-semibold text-foreground truncate">
                                                         {project.title}
                                                     </h3>
-                                                    <p className="text-sm text-stone-500 mt-0.5">
+                                                    <p className="text-sm text-muted-foreground mt-0.5">
                                                         {formatDateRange(
                                                             project.startDate,
                                                             project.endDate,
@@ -494,11 +486,11 @@ export default function Home() {
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-1.5 ml-3">
-                                                    <span className="text-sm font-medium text-stone-900">
+                                                    <span className="text-sm font-medium text-foreground">
                                                         {progress}%
                                                     </span>
                                                     <svg
-                                                        className="w-4 h-4 text-stone-400"
+                                                        className="w-4 h-4 text-muted-foreground"
                                                         fill="none"
                                                         stroke="currentColor"
                                                         viewBox="0 0 24 24"
@@ -514,7 +506,7 @@ export default function Home() {
                                             </div>
 
                                             {/* Progress bar */}
-                                            <div className="h-2 bg-stone-100 rounded-full overflow-hidden mb-3">
+                                            <div className="h-2 bg-muted rounded-full overflow-hidden mb-3">
                                                 <div
                                                     className="h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full transition-all duration-500"
                                                     style={{
@@ -557,7 +549,7 @@ export default function Home() {
                         )}
                     </>
                 )}
-            </main>
+            </div>
 
             <AlertModal
                 isOpen={errorModal.isOpen}
@@ -566,6 +558,6 @@ export default function Home() {
                 message={errorModal.message}
                 variant="error"
             />
-        </div>
+        </Shell>
     );
 }

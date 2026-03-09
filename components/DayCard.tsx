@@ -118,15 +118,15 @@ export default function DayCard({
     }
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
             {/* Compact Header - Always Visible */}
             <div
-                className="p-4 cursor-pointer active:bg-stone-50 transition-colors"
+                className="p-4 cursor-pointer active:bg-muted transition-colors"
                 onClick={onToggleExpand}
             >
                 <div className="flex items-start gap-3">
                     {/* Day Number Circle */}
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white font-bold shadow-lg shadow-orange-500/20">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-white font-bold shadow-sm">
                         {day.dayIndex}
                     </div>
 
@@ -135,13 +135,13 @@ export default function DayCard({
                             <span className="text-2xl">
                                 {vibeIcons[day.vibe]}
                             </span>
-                            <span className="font-semibold text-stone-900">
+                            <span className="font-semibold text-foreground">
                                 {formatDisplayDate(day.date)}
                             </span>
                         </div>
 
                         {day.location && (
-                            <p className="text-sm text-stone-500 truncate mb-2">
+                            <p className="text-sm text-muted-foreground truncate mb-2">
                                 {day.location}
                             </p>
                         )}
@@ -161,7 +161,7 @@ export default function DayCard({
                                 {statusConfig[day.status].label}
                             </span>
                             {totalItems > 0 && (
-                                <span className="text-xs text-stone-400">
+                                <span className="text-xs text-muted-foreground">
                                     {completedItems}/{totalItems} shots
                                 </span>
                             )}
@@ -170,7 +170,7 @@ export default function DayCard({
 
                     {/* Expand Arrow */}
                     <svg
-                        className={`w-5 h-5 text-stone-400 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                        className={`w-5 h-5 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -186,7 +186,7 @@ export default function DayCard({
 
                 {/* Hook Preview (when collapsed) */}
                 {!isExpanded && day.hook && (
-                    <p className="mt-3 text-sm text-stone-600 italic line-clamp-2 pl-15">
+                    <p className="mt-3 text-sm text-muted-foreground italic line-clamp-2 pl-15">
                         "{day.hook}"
                     </p>
                 )}
@@ -196,18 +196,18 @@ export default function DayCard({
             {isExpanded && (
                 <div className="px-4 pb-4 animate-fade-in">
                     {/* Hook */}
-                    <div className="mb-4 p-3 bg-stone-50 rounded-xl">
-                        <p className="text-sm font-medium text-stone-700 mb-1">
+                    <div className="mb-4 p-3 bg-muted rounded-xl">
+                        <p className="text-sm font-medium text-foreground mb-1">
                             Hook
                         </p>
-                        <p className="text-sm text-stone-900 italic">
+                        <p className="text-sm text-foreground italic">
                             "{day.hook}"
                         </p>
                     </div>
 
                     {/* Status Quick Select */}
                     <div className="mb-4">
-                        <p className="text-sm font-medium text-stone-700 mb-2">
+                        <p className="text-sm font-medium text-foreground mb-2">
                             Status
                         </p>
                         <div className="flex gap-2">
@@ -227,8 +227,8 @@ export default function DayCard({
                                     }}
                                     className={`flex-1 py-2 rounded-xl text-xs font-medium transition-all ${
                                         day.status === status
-                                            ? `${statusConfig[status].bg} ${statusConfig[status].text} ring-2 ring-offset-1 ring-stone-300`
-                                            : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                                            ? `${statusConfig[status].bg} ${statusConfig[status].text} ring-2 ring-offset-1 ring-border`
+                                            : "bg-muted text-muted-foreground hover:bg-muted/80"
                                     }`}
                                 >
                                     {statusConfig[status].label}
@@ -240,11 +240,11 @@ export default function DayCard({
                     {/* Shots Checklist */}
                     <div className="mb-4">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm font-medium text-stone-700">
+                            <p className="text-sm font-medium text-foreground">
                                 Shots ({completedShots}/{shots.length})
                             </p>
                             {shots.length > 0 && (
-                                <div className="h-1.5 w-20 bg-stone-100 rounded-full overflow-hidden">
+                                <div className="h-1.5 w-20 bg-muted rounded-full overflow-hidden">
                                     <div
                                         className="h-full bg-green-500 rounded-full transition-all"
                                         style={{
@@ -261,7 +261,7 @@ export default function DayCard({
                                     className={`flex items-start gap-3 p-3 rounded-xl cursor-pointer transition-all ${
                                         shot.completed
                                             ? "bg-green-50"
-                                            : "bg-stone-50 hover:bg-stone-100"
+                                            : "bg-muted hover:bg-muted/80"
                                     }`}
                                     onClick={(e) => e.stopPropagation()}
                                 >
@@ -269,10 +269,10 @@ export default function DayCard({
                                         type="checkbox"
                                         checked={shot.completed}
                                         onChange={() => toggleShotComplete(idx)}
-                                        className="mt-0.5 rounded border-stone-300"
+                                        className="mt-0.5 rounded border-border"
                                     />
                                     <span
-                                        className={`text-sm flex-1 ${shot.completed ? "text-stone-400 line-through" : "text-stone-700"}`}
+                                        className={`text-sm flex-1 ${shot.completed ? "text-muted-foreground line-through" : "text-foreground"}`}
                                     >
                                         {shot.text}
                                     </span>
@@ -285,10 +285,10 @@ export default function DayCard({
                     {broll.length > 0 && (
                         <div className="mb-4">
                             <div className="flex items-center justify-between mb-2">
-                                <p className="text-sm font-medium text-stone-700">
+                                <p className="text-sm font-medium text-foreground">
                                     B-Roll ({completedBroll}/{broll.length})
                                 </p>
-                                <div className="h-1.5 w-20 bg-stone-100 rounded-full overflow-hidden">
+                                <div className="h-1.5 w-20 bg-muted rounded-full overflow-hidden">
                                     <div
                                         className="h-full bg-green-500 rounded-full transition-all"
                                         style={{
@@ -304,7 +304,7 @@ export default function DayCard({
                                         className={`flex items-start gap-3 p-3 rounded-xl cursor-pointer transition-all ${
                                             item.completed
                                                 ? "bg-green-50"
-                                                : "bg-stone-50 hover:bg-stone-100"
+                                                : "bg-muted hover:bg-muted/80"
                                         }`}
                                         onClick={(e) => e.stopPropagation()}
                                     >
@@ -314,10 +314,10 @@ export default function DayCard({
                                             onChange={() =>
                                                 toggleBrollComplete(idx)
                                             }
-                                            className="mt-0.5 rounded border-stone-300"
+                                            className="mt-0.5 rounded border-border"
                                         />
                                         <span
-                                            className={`text-sm flex-1 ${item.completed ? "text-stone-400 line-through" : "text-stone-700"}`}
+                                            className={`text-sm flex-1 ${item.completed ? "text-muted-foreground line-through" : "text-foreground"}`}
                                         >
                                             {item.text}
                                         </span>
@@ -328,18 +328,18 @@ export default function DayCard({
                     )}
 
                     {/* Caption Seed */}
-                    <div className="mb-4 p-3 bg-stone-50 rounded-xl">
-                        <p className="text-sm font-medium text-stone-700 mb-1">
+                    <div className="mb-4 p-3 bg-muted rounded-xl">
+                        <p className="text-sm font-medium text-foreground mb-1">
                             Caption Seed
                         </p>
-                        <p className="text-sm text-stone-600">
+                        <p className="text-sm text-muted-foreground">
                             {day.captionSeed}
                         </p>
                     </div>
 
                     {/* Posting Time */}
                     {day.postingTime && (
-                        <div className="mb-4 flex items-center gap-2 text-sm text-stone-500">
+                        <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
                             <svg
                                 className="w-4 h-4"
                                 fill="none"
@@ -360,7 +360,7 @@ export default function DayCard({
                     {/* Notes */}
                     <div className="mb-4">
                         <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm font-medium text-stone-700">
+                            <p className="text-sm font-medium text-foreground">
                                 Notes
                             </p>
                             {!showNoteInput && (
@@ -370,7 +370,7 @@ export default function DayCard({
                                         setShowNoteInput(true);
                                         setNoteText(day.notes || "");
                                     }}
-                                    className="text-xs text-orange-600 font-medium hover:text-orange-700"
+                                    className="text-xs text-primary font-medium hover:text-primary"
                                 >
                                     {day.notes ? "Edit" : "Add note"}
                                 </button>
@@ -385,44 +385,44 @@ export default function DayCard({
                                         setNoteText(e.target.value)
                                     }
                                     placeholder="Add notes about this day..."
-                                    className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:border-orange-300 focus:ring-2 focus:ring-orange-100 transition-all resize-none text-sm"
+                                    className="w-full px-4 py-3 rounded-xl border border-border bg-muted focus:bg-card focus:border-ring focus:ring-2 focus:ring-ring/30 transition-all resize-none text-sm"
                                     rows={3}
                                     autoFocus
                                 />
                                 <div className="flex gap-2 mt-2">
                                     <button
                                         onClick={saveNote}
-                                        className="flex-1 py-2 bg-orange-500 text-white rounded-xl text-sm font-medium hover:bg-orange-600 transition-colors"
+                                        className="flex-1 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors"
                                     >
                                         Save
                                     </button>
                                     <button
                                         onClick={() => setShowNoteInput(false)}
-                                        className="px-4 py-2 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors"
+                                        className="px-4 py-2 bg-muted text-foreground rounded-xl text-sm font-medium hover:bg-muted/80 transition-colors"
                                     >
                                         Cancel
                                     </button>
                                 </div>
                             </div>
                         ) : day.notes ? (
-                            <p className="text-sm text-stone-600 p-3 bg-amber-50 rounded-xl border border-amber-100">
+                            <p className="text-sm text-muted-foreground p-3 bg-amber-50 rounded-xl border border-amber-100">
                                 {day.notes}
                             </p>
                         ) : (
-                            <p className="text-sm text-stone-400 italic">
+                            <p className="text-sm text-muted-foreground italic">
                                 No notes yet
                             </p>
                         )}
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2 pt-3 border-t border-stone-100">
+                    <div className="flex gap-2 pt-3 border-t border-border">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setIsEditing(true);
                             }}
-                            className="flex-1 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 py-2.5 bg-muted text-foreground rounded-xl text-sm font-medium hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
                         >
                             <svg
                                 className="w-4 h-4"
@@ -459,7 +459,7 @@ export default function DayCard({
                                     onRegenerate(false);
                                 }
                             }}
-                            className="flex-1 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 py-2.5 bg-muted text-foreground rounded-xl text-sm font-medium hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
                         >
                             <svg
                                 className="w-4 h-4"
