@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import DayCard from "@/components/DayCard";
 import ProgressBar from "@/components/ProgressBar";
+import { ConfirmModal, AlertModal, useToast } from "@/components/Modal";
 import { TripProject, ContentDay, GeneratedDay } from "@/lib/types";
 import { addDays, getDaysBetween } from "@/lib/date";
 import {
@@ -19,6 +20,7 @@ export default function ProjectPage() {
     const params = useParams();
     const router = useRouter();
     const projectId = params.id as string;
+    const { showToast } = useToast();
 
     const [project, setProject] = useState<TripProject | null>(null);
     const [loading, setLoading] = useState(true);
@@ -38,6 +40,15 @@ export default function ProjectPage() {
     const [expandedDay, setExpandedDay] = useState<string | null>(null);
     const [editingDates, setEditingDates] = useState(false);
     const [newStartDate, setNewStartDate] = useState("");
+
+    // Modal states
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showRegenerateAllConfirm, setShowRegenerateAllConfirm] =
+        useState(false);
+    const [errorModal, setErrorModal] = useState<{
+        isOpen: boolean;
+        message: string;
+    }>({ isOpen: false, message: "" });
 
     useEffect(() => {
         getProject(projectId).then((loadedProject) => {
@@ -164,11 +175,13 @@ export default function ProjectPage() {
             updateDay(updatedDay);
         } catch (error) {
             console.error("Error regenerating day:", error);
-            alert(
-                error instanceof Error
-                    ? error.message
-                    : "Failed to regenerate day",
-            );
+            setErrorModal({
+                isOpen: true,
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to regenerate day",
+            });
         } finally {
             setRegenerating(null);
         }
@@ -176,12 +189,6 @@ export default function ProjectPage() {
 
     const regenerateAll = async () => {
         if (!project) return;
-
-        const confirmRegen = confirm(
-            "This will regenerate all days. Any manual edits will be preserved. Continue?",
-        );
-
-        if (!confirmRegen) return;
 
         setRegeneratingAll(true);
         setRegenerationProgress({
@@ -261,11 +268,13 @@ export default function ProjectPage() {
             await upsertProject(updatedProject);
         } catch (error) {
             console.error("Error regenerating all days:", error);
-            alert(
-                error instanceof Error
-                    ? error.message
-                    : "Failed to regenerate all days",
-            );
+            setErrorModal({
+                isOpen: true,
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to regenerate all days",
+            });
         } finally {
             setRegeneratingAll(false);
             setRegenerationProgress({ current: 0, total: 0, message: "" });
@@ -279,7 +288,7 @@ export default function ProjectPage() {
         const copied = await copyToClipboard(json);
 
         if (copied) {
-            alert("Project copied to clipboard!");
+            showToast("Project copied to clipboard!");
         }
 
         downloadJson(project);
@@ -298,29 +307,22 @@ export default function ProjectPage() {
                     text: `Check out my ${project.days.length} day road trip itinerary!`,
                     url: shareUrl,
                 });
-            } catch (err) {
+            } catch {
                 // User cancelled or share failed, copy to clipboard instead
                 await copyToClipboard(shareUrl);
-                alert("Share link copied to clipboard!");
+                showToast("Share link copied to clipboard!");
             }
         } else {
             await copyToClipboard(shareUrl);
-            alert("Share link copied to clipboard!");
+            showToast("Share link copied to clipboard!");
         }
         setShowMenu(false);
     };
 
     const handleDelete = async () => {
         if (!project) return;
-
-        const confirmDelete = confirm(
-            `Are you sure you want to delete "${project.title}"? This cannot be undone.`,
-        );
-
-        if (confirmDelete) {
-            await deleteProject(project.id);
-            router.push("/");
-        }
+        await deleteProject(project.id);
+        router.push("/");
     };
 
     const updateSettings = async (
@@ -558,7 +560,7 @@ export default function ProjectPage() {
                                     </button>
                                     <button
                                         onClick={() => {
-                                            regenerateAll();
+                                            setShowRegenerateAllConfirm(true);
                                             setShowMenu(false);
                                         }}
                                         disabled={regeneratingAll}
@@ -581,7 +583,10 @@ export default function ProjectPage() {
                                     </button>
                                     <div className="border-t border-stone-100 my-2" />
                                     <button
-                                        onClick={handleDelete}
+                                        onClick={() => {
+                                            setShowDeleteConfirm(true);
+                                            setShowMenu(false);
+                                        }}
                                         className="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3"
                                     >
                                         <svg
@@ -957,6 +962,35 @@ export default function ProjectPage() {
                     </div>
                 )}
             </main>
+
+            {/* Confirmation Modals */}
+            <ConfirmModal
+                isOpen={showDeleteConfirm}
+                onClose={() => setShowDeleteConfirm(false)}
+                onConfirm={handleDelete}
+                title="Delete Project"
+                message={`Are you sure you want to delete "${project?.title}"? This cannot be undone.`}
+                confirmText="Delete"
+                confirmVariant="danger"
+            />
+
+            <ConfirmModal
+                isOpen={showRegenerateAllConfirm}
+                onClose={() => setShowRegenerateAllConfirm(false)}
+                onConfirm={regenerateAll}
+                title="Regenerate All Days"
+                message="This will regenerate all days. Any manual edits will be preserved."
+                confirmText="Regenerate"
+                confirmVariant="primary"
+            />
+
+            <AlertModal
+                isOpen={errorModal.isOpen}
+                onClose={() => setErrorModal({ isOpen: false, message: "" })}
+                title="Error"
+                message={errorModal.message}
+                variant="error"
+            />
         </div>
     );
 }

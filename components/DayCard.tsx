@@ -10,6 +10,7 @@ import {
 } from "@/lib/types";
 import { formatDisplayDate } from "@/lib/date";
 import DayEditor from "./DayEditor";
+import { RegenerateModal } from "./Modal";
 
 interface DayCardProps {
     day: ContentDay;
@@ -29,6 +30,7 @@ export default function DayCard({
     const [isEditing, setIsEditing] = useState(false);
     const [showNoteInput, setShowNoteInput] = useState(false);
     const [noteText, setNoteText] = useState(day.notes || "");
+    const [showRegenerateModal, setShowRegenerateModal] = useState(false);
 
     const shots = normalizeShots(day.shots);
     const broll = normalizeBroll(day.broll);
@@ -440,7 +442,7 @@ export default function DayCard({
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                // If day has edited content fields, offer force regenerate
+                                // If day has edited content fields, show modal for choice
                                 const hasEditedContent = day.editedFields?.some(
                                     (f) =>
                                         [
@@ -452,12 +454,7 @@ export default function DayCard({
                                         ].includes(f),
                                 );
                                 if (hasEditedContent) {
-                                    const force = confirm(
-                                        "This day has manual edits. Do you want to:\n\n" +
-                                            "• OK = Replace ALL content with fresh AI suggestions\n" +
-                                            "• Cancel = Keep your edits (only update unedited fields)",
-                                    );
-                                    onRegenerate(force);
+                                    setShowRegenerateModal(true);
                                 } else {
                                     onRegenerate(false);
                                 }
@@ -482,6 +479,13 @@ export default function DayCard({
                     </div>
                 </div>
             )}
+
+            {/* Regenerate Modal */}
+            <RegenerateModal
+                isOpen={showRegenerateModal}
+                onClose={() => setShowRegenerateModal(false)}
+                onRegenerate={onRegenerate}
+            />
         </div>
     );
 }

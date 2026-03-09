@@ -13,9 +13,11 @@ import {
 } from "@/lib/types";
 import { loadProjects, upsertProject, importProject } from "@/lib/storage";
 import { enumerateDays } from "@/lib/date";
+import { AlertModal, useToast } from "@/components/Modal";
 
 export default function Home() {
     const router = useRouter();
+    const { showToast } = useToast();
     const [projects, setProjects] = useState<TripProject[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
@@ -27,6 +29,10 @@ export default function Home() {
     });
     const [importJson, setImportJson] = useState("");
     const [showImport, setShowImport] = useState(false);
+    const [errorModal, setErrorModal] = useState<{
+        isOpen: boolean;
+        message: string;
+    }>({ isOpen: false, message: "" });
 
     useEffect(() => {
         loadProjects().then((data) => {
@@ -166,11 +172,13 @@ export default function Home() {
             router.push(`/project/${projectId}`);
         } catch (error) {
             console.error("Error creating project:", error);
-            alert(
-                error instanceof Error
-                    ? error.message
-                    : "Failed to create project",
-            );
+            setErrorModal({
+                isOpen: true,
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to create project",
+            });
         } finally {
             setIsGenerating(false);
             setGenerationProgress({ current: 0, total: 0, message: "" });
@@ -187,7 +195,11 @@ export default function Home() {
             setShowImport(false);
             router.push(`/project/${project.id}`);
         } else {
-            alert("Invalid JSON format");
+            setErrorModal({
+                isOpen: true,
+                message:
+                    "Invalid JSON format. Please check your input and try again.",
+            });
         }
     };
 
@@ -546,6 +558,14 @@ export default function Home() {
                     </>
                 )}
             </main>
+
+            <AlertModal
+                isOpen={errorModal.isOpen}
+                onClose={() => setErrorModal({ isOpen: false, message: "" })}
+                title="Error"
+                message={errorModal.message}
+                variant="error"
+            />
         </div>
     );
 }
