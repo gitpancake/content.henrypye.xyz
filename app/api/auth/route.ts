@@ -13,12 +13,18 @@ export async function POST(req: Request) {
     const userRecord = await adminAuth.getUser(decoded.uid);
 
     await setSession(idToken);
+
+    const session = await getSession();
+
     return Response.json({
       ok: true,
       uid: decoded.uid,
       email: userRecord.email ?? "",
       displayName: userRecord.displayName ?? null,
       photoURL: userRecord.photoURL ?? null,
+      sharedUserId: session?.sharedUserId,
+      activeTeamId: session?.activeTeamId,
+      teamRole: session?.teamRole,
     });
   } catch {
     return Response.json({ error: "Invalid token" }, { status: 401 });
@@ -36,6 +42,9 @@ export async function GET() {
     email: session.email,
     displayName: session.displayName,
     photoURL: session.photoURL,
+    sharedUserId: session.sharedUserId,
+    activeTeamId: session.activeTeamId,
+    teamRole: session.teamRole,
   });
 }
 

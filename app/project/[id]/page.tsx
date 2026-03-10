@@ -62,7 +62,7 @@ function ProjectPageInner() {
     }>({ isOpen: false, message: "" });
 
     useEffect(() => {
-        getProject(projectId, user.uid).then((loadedProject) => {
+        getProject(projectId, user.activeTeamId).then((loadedProject) => {
             if (loadedProject) {
                 setProject(loadedProject);
             } else {
@@ -94,7 +94,7 @@ function ProjectPageInner() {
         };
 
         setProject(updatedProject);
-        await upsertProject(updatedProject, user.uid);
+        await upsertProject(updatedProject, user.activeTeamId);
     };
 
     const regenerateDay = async (
@@ -276,7 +276,7 @@ function ProjectPageInner() {
             };
 
             setProject(updatedProject);
-            await upsertProject(updatedProject, user.uid);
+            await upsertProject(updatedProject, user.activeTeamId);
         } catch (error) {
             console.error("Error regenerating all days:", error);
             setErrorModal({
@@ -332,7 +332,7 @@ function ProjectPageInner() {
 
     const handleDelete = async () => {
         if (!project) return;
-        await deleteProject(project.id, user.uid);
+        await deleteProject(project.id, user.activeTeamId);
         router.push("/");
     };
 
@@ -348,7 +348,7 @@ function ProjectPageInner() {
         };
 
         setProject(updatedProject);
-        await upsertProject(updatedProject, user.uid);
+        await upsertProject(updatedProject, user.activeTeamId);
     };
 
     const shiftTripDates = async (newStart: string) => {
@@ -372,7 +372,7 @@ function ProjectPageInner() {
         };
 
         setProject(updatedProject);
-        await upsertProject(updatedProject, user.uid);
+        await upsertProject(updatedProject, user.activeTeamId);
         setEditingDates(false);
         setNewStartDate("");
     };

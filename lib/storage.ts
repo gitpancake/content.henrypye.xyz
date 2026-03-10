@@ -5,6 +5,7 @@ import { supabase } from "./supabase";
 interface TripProjectRow {
     id: string;
     user_id: string;
+    team_id: string;
     title: string;
     start_date: string;
     end_date: string;
@@ -33,10 +34,11 @@ function rowToProject(row: TripProjectRow): TripProject {
 }
 
 // Convert TripProject to database row
-function projectToRow(project: TripProject, userId: string): TripProjectRow {
+function projectToRow(project: TripProject, teamId: string): Omit<TripProjectRow, "user_id"> & { user_id: string; team_id: string } {
     return {
         id: project.id,
-        user_id: userId,
+        user_id: "", // Legacy field
+        team_id: teamId,
         title: project.title,
         start_date: project.startDate,
         end_date: project.endDate,
@@ -49,12 +51,12 @@ function projectToRow(project: TripProject, userId: string): TripProjectRow {
     };
 }
 
-export async function loadProjects(userId: string): Promise<TripProject[]> {
+export async function loadProjects(teamId: string): Promise<TripProject[]> {
     try {
         const { data, error } = await supabase
             .from("trip_projects")
             .select("*")
-            .eq("user_id", userId)
+            .eq("team_id", teamId)
             .order("updated_at", { ascending: false });
 
         if (error) {
@@ -69,9 +71,9 @@ export async function loadProjects(userId: string): Promise<TripProject[]> {
     }
 }
 
-export async function saveProject(project: TripProject, userId: string): Promise<void> {
+export async function saveProject(project: TripProject, teamId: string): Promise<void> {
     try {
-        const row = projectToRow(project, userId);
+        const row = projectToRow(project, teamId);
         const { error } = await supabase
             .from("trip_projects")
             .upsert(row, { onConflict: "id" });
@@ -84,23 +86,23 @@ export async function saveProject(project: TripProject, userId: string): Promise
     }
 }
 
-export async function upsertProject(project: TripProject, userId: string): Promise<void> {
+export async function upsertProject(project: TripProject, teamId: string): Promise<void> {
     const now = Date.now();
     const projectToSave = {
         ...project,
         createdAt: project.createdAt || now,
         updatedAt: now,
     };
-    await saveProject(projectToSave, userId);
+    await saveProject(projectToSave, teamId);
 }
 
-export async function deleteProject(projectId: string, userId: string): Promise<void> {
+export async function deleteProject(projectId: string, teamId: string): Promise<void> {
     try {
         const { error } = await supabase
             .from("trip_projects")
             .delete()
             .eq("id", projectId)
-            .eq("user_id", userId);
+            .eq("team_id", teamId);
 
         if (error) {
             console.error("Failed to delete project from Supabase:", error);
@@ -112,19 +114,18 @@ export async function deleteProject(projectId: string, userId: string): Promise<
 
 export async function getProject(
     projectId: string,
-    userId: string,
+    teamId: string,
 ): Promise<TripProject | null> {
     try {
         const { data, error } = await supabase
             .from("trip_projects")
             .select("*")
             .eq("id", projectId)
-            .eq("user_id", userId)
+            .eq("team_id", teamId)
             .single();
 
         if (error) {
             if (error.code === "PGRST116") {
-                // No rows returned
                 return null;
             }
             console.error("Failed to get project from Supabase:", error);

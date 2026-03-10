@@ -9,8 +9,9 @@ export function middleware(request: NextRequest) {
     // Allow access to login page, auth API, and public route pages
     if (
         pathname === "/login" ||
-        pathname.startsWith("/api/auth") ||
-        pathname.startsWith("/route/")
+        pathname.startsWith("/api/") ||
+        pathname.startsWith("/route/") ||
+        pathname.startsWith("/invite")
     ) {
         return NextResponse.next();
     }

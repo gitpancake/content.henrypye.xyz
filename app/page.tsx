@@ -46,11 +46,11 @@ function HomeInner() {
     }>({ isOpen: false, message: "" });
 
     useEffect(() => {
-        loadProjects(user.uid).then((data) => {
+        loadProjects(user.activeTeamId).then((data) => {
             setProjects(data);
             setIsLoading(false);
         });
-    }, [user.uid]);
+    }, [user.activeTeamId]);
 
     const handleCreateProject = async (data: {
         title: string;
@@ -179,7 +179,7 @@ function HomeInner() {
                 message: "Saving project...",
             });
 
-            await upsertProject(project, user.uid);
+            await upsertProject(project, user.activeTeamId);
             router.push(`/project/${projectId}`);
         } catch (error) {
             console.error("Error creating project:", error);
@@ -199,8 +199,8 @@ function HomeInner() {
     const handleImport = async () => {
         const project = importProject(importJson);
         if (project) {
-            await upsertProject(project, user.uid);
-            const updatedProjects = await loadProjects(user.uid);
+            await upsertProject(project, user.activeTeamId);
+            const updatedProjects = await loadProjects(user.activeTeamId);
             setProjects(updatedProjects);
             setImportJson("");
             setShowImport(false);
