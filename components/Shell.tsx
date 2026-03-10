@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AuthProvider, useAuth, type AuthUser } from "@/contexts/AuthContext";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -132,6 +132,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
 export function Shell({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<AuthUser | null>(null);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         fetch("/api/auth")
@@ -147,10 +148,15 @@ export function Shell({ children }: { children: React.ReactNode }) {
                         activeTeamId: d.activeTeamId,
                         teamRole: d.teamRole,
                     });
+                } else {
+                    router.replace("/login");
                 }
             })
+            .catch(() => {
+                router.replace("/login");
+            })
             .finally(() => setLoading(false));
-    }, []);
+    }, [router]);
 
     if (loading || !user) {
         return (
