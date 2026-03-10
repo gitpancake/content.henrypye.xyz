@@ -16,12 +16,22 @@ import {
     copyToClipboard,
     exportProject,
 } from "@/lib/storage";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProjectPage() {
+    return (
+        <Shell>
+            <ProjectPageInner />
+        </Shell>
+    );
+}
+
+function ProjectPageInner() {
     const params = useParams();
     const router = useRouter();
     const projectId = params.id as string;
     const { showToast } = useToast();
+    const { user } = useAuth();
 
     const [project, setProject] = useState<TripProject | null>(null);
     const [loading, setLoading] = useState(true);
@@ -52,7 +62,7 @@ export default function ProjectPage() {
     }>({ isOpen: false, message: "" });
 
     useEffect(() => {
-        getProject(projectId).then((loadedProject) => {
+        getProject(projectId, user.uid).then((loadedProject) => {
             if (loadedProject) {
                 setProject(loadedProject);
             } else {
@@ -84,7 +94,7 @@ export default function ProjectPage() {
         };
 
         setProject(updatedProject);
-        await upsertProject(updatedProject);
+        await upsertProject(updatedProject, user.uid);
     };
 
     const regenerateDay = async (
@@ -266,7 +276,7 @@ export default function ProjectPage() {
             };
 
             setProject(updatedProject);
-            await upsertProject(updatedProject);
+            await upsertProject(updatedProject, user.uid);
         } catch (error) {
             console.error("Error regenerating all days:", error);
             setErrorModal({
@@ -322,7 +332,7 @@ export default function ProjectPage() {
 
     const handleDelete = async () => {
         if (!project) return;
-        await deleteProject(project.id);
+        await deleteProject(project.id, user.uid);
         router.push("/");
     };
 
@@ -338,7 +348,7 @@ export default function ProjectPage() {
         };
 
         setProject(updatedProject);
-        await upsertProject(updatedProject);
+        await upsertProject(updatedProject, user.uid);
     };
 
     const shiftTripDates = async (newStart: string) => {
@@ -362,28 +372,24 @@ export default function ProjectPage() {
         };
 
         setProject(updatedProject);
-        await upsertProject(updatedProject);
+        await upsertProject(updatedProject, user.uid);
         setEditingDates(false);
         setNewStartDate("");
     };
 
     if (loading) {
         return (
-            <Shell>
-                <div className="flex items-center justify-center py-20">
-                    <div className="animate-pulse text-muted-foreground">Loading...</div>
-                </div>
-            </Shell>
+            <div className="flex items-center justify-center py-20">
+                <div className="animate-pulse text-muted-foreground">Loading...</div>
+            </div>
         );
     }
 
     if (!project) {
         return (
-            <Shell>
-                <div className="flex items-center justify-center py-20">
-                    <p className="text-muted-foreground">Project not found</p>
-                </div>
-            </Shell>
+            <div className="flex items-center justify-center py-20">
+                <p className="text-muted-foreground">Project not found</p>
+            </div>
         );
     }
 
@@ -413,7 +419,7 @@ export default function ProjectPage() {
     };
 
     return (
-        <Shell>
+        <>
             <div className="max-w-2xl mx-auto">
                 {/* Project Header */}
                 <div className="flex items-center justify-between mb-4">
@@ -994,6 +1000,6 @@ export default function ProjectPage() {
                 message={errorModal.message}
                 variant="error"
             />
-        </Shell>
+        </>
     );
 }

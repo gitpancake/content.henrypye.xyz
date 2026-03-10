@@ -15,10 +15,20 @@ import {
 import { loadProjects, upsertProject, importProject } from "@/lib/storage";
 import { enumerateDays } from "@/lib/date";
 import { AlertModal, useToast } from "@/components/Modal";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
+    return (
+        <Shell>
+            <HomeInner />
+        </Shell>
+    );
+}
+
+function HomeInner() {
     const router = useRouter();
     const { showToast } = useToast();
+    const { user } = useAuth();
     const [projects, setProjects] = useState<TripProject[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
@@ -36,11 +46,11 @@ export default function Home() {
     }>({ isOpen: false, message: "" });
 
     useEffect(() => {
-        loadProjects().then((data) => {
+        loadProjects(user.uid).then((data) => {
             setProjects(data);
             setIsLoading(false);
         });
-    }, []);
+    }, [user.uid]);
 
     const handleCreateProject = async (data: {
         title: string;
@@ -169,7 +179,7 @@ export default function Home() {
                 message: "Saving project...",
             });
 
-            await upsertProject(project);
+            await upsertProject(project, user.uid);
             router.push(`/project/${projectId}`);
         } catch (error) {
             console.error("Error creating project:", error);
@@ -189,8 +199,8 @@ export default function Home() {
     const handleImport = async () => {
         const project = importProject(importJson);
         if (project) {
-            await upsertProject(project);
-            const updatedProjects = await loadProjects();
+            await upsertProject(project, user.uid);
+            const updatedProjects = await loadProjects(user.uid);
             setProjects(updatedProjects);
             setImportJson("");
             setShowImport(false);
@@ -221,7 +231,7 @@ export default function Home() {
     };
 
     return (
-        <Shell>
+        <>
             <div className="max-w-2xl mx-auto">
                 {/* New Trip button moved into page content */}
                 {!isCreating && !isGenerating && !isLoading && (
@@ -558,6 +568,6 @@ export default function Home() {
                 message={errorModal.message}
                 variant="error"
             />
-        </Shell>
+        </>
     );
 }
