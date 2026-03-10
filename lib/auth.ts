@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { adminAuth } from "./firebase-admin";
-import { supabase } from "./supabase";
+import { supabaseAdmin } from "./supabase-admin";
 
 const SESSION_COOKIE = "firebase-token";
 const TEAM_COOKIE = "active-team";
@@ -28,7 +28,7 @@ async function resolveToken(token: string): Promise<SessionUser | null> {
     const photoURL = userRecord.photoURL ?? null;
 
     // Upsert shared_users
-    const { data: existingUser } = await supabase
+    const { data: existingUser } = await supabaseAdmin
       .from("shared_users")
       .select("id")
       .eq("firebase_uid", decoded.uid)
@@ -37,12 +37,12 @@ async function resolveToken(token: string): Promise<SessionUser | null> {
     let sharedUserId: string;
     if (existingUser) {
       sharedUserId = existingUser.id;
-      await supabase
+      await supabaseAdmin
         .from("shared_users")
         .update({ email, display_name: displayName, photo_url: photoURL, updated_at: new Date().toISOString() })
         .eq("id", sharedUserId);
     } else {
-      const { data: newUser, error } = await supabase
+      const { data: newUser, error } = await supabaseAdmin
         .from("shared_users")
         .insert({ firebase_uid: decoded.uid, email, display_name: displayName, photo_url: photoURL })
         .select("id")
@@ -52,26 +52,26 @@ async function resolveToken(token: string): Promise<SessionUser | null> {
     }
 
     // Get memberships
-    let { data: memberships } = await supabase
+    let { data: memberships } = await supabaseAdmin
       .from("shared_team_members")
       .select("id, team_id, role, shared_teams(id, name)")
       .eq("user_id", sharedUserId);
 
     // Auto-create personal team if none
     if (!memberships || memberships.length === 0) {
-      const { data: team } = await supabase
+      const { data: team } = await supabaseAdmin
         .from("shared_teams")
         .insert({ name: `${displayName || email}'s Team`, created_by: sharedUserId })
         .select("id")
         .single();
 
       if (team) {
-        await supabase
+        await supabaseAdmin
           .from("shared_team_members")
           .insert({ team_id: team.id, user_id: sharedUserId, role: "owner" });
       }
 
-      const { data: refreshed } = await supabase
+      const { data: refreshed } = await supabaseAdmin
         .from("shared_team_members")
         .select("id, team_id, role, shared_teams(id, name)")
         .eq("user_id", sharedUserId);
